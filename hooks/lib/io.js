@@ -1,24 +1,53 @@
-// stdin/stdout plumbing for hooks. Rule 4 of the brief: never block real work.
-// Any failure in here exits 0 with no output.
-import fs from 'node:fs';
+// stdin/stdout plumbing shared by every hook. The contract is simple: a hook
+// that fails goes quiet. It never exits non-zero, never prints garbage, and
+// never waits on stdin longer than a second.
 import { debug } from './state.js';
 
-export function readInput() {
+// On Windows, Claude Code can run a shell-form hook through a PowerShell
+// wrapper that swallows the piped JSON, so stdin 'end' never fires. A blocking
+// read would then sit there until the hook timeout and the output would be
+// thrown away. Collect what arrives, and after a short grace period go with
+// that (ponytail hit the same thing, their issue #443).
+const STDIN_GRACE_MS = 1000;
+
+export function parseInput(raw) {
   try {
-    if (process.stdin.isTTY) return {};
-    const raw = fs.readFileSync(0, 'utf8');
-    if (!raw.trim()) return {};
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : {};
+    const text = String(raw || '').replace(/^﻿/, '').trim();
+    if (!text) return {};
+    const parsed = JSON.parse(text);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
   } catch {
     return {};
   }
 }
 
+export function readInput() {
+  return new Promise((resolve) => {
+    if (process.stdin.isTTY) {
+      resolve({});
+      return;
+    }
+    let raw = '';
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      resolve(parseInput(raw));
+    };
+    process.stdin.setEncoding('utf8');
+    process.stdin.on('data', (chunk) => { raw += chunk; });
+    process.stdin.on('end', finish);
+    process.stdin.on('error', finish);
+    setTimeout(finish, STDIN_GRACE_MS).unref();
+  });
+}
+
 export function emit(payload) {
   try {
     if (payload) process.stdout.write(`${JSON.stringify(payload)}\n`);
-  } catch { /* stdout closed */ }
+  } catch {
+    // stdout already closed; nothing to do
+  }
   process.exit(0);
 }
 
@@ -26,10 +55,9 @@ export function quiet() {
   process.exit(0);
 }
 
-/** Wraps a hook body so a thrown error is silence, not a broken session. */
 export async function run(name, fn) {
   try {
-    const input = readInput();
+    const input = await readInput();
     debug(`${name}:in`, { event: input.hook_event_name, session: input.session_id });
     const out = await fn(input);
     if (out) {

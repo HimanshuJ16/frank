@@ -62,19 +62,22 @@ test('the plugin manifest points at hooks that exist', () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, '.claude-plugin', 'plugin.json'), 'utf8'));
   const hooksFile = path.join(ROOT, manifest.hooks.replace('./', ''));
   const config = JSON.parse(fs.readFileSync(hooksFile, 'utf8'));
+  // Codex reads the same file and only understands shell form, so every entry
+  // is `node "${CLAUDE_PLUGIN_ROOT}/hooks/<script>.js"`. The quotes matter:
+  // Windows install paths have spaces in them.
   const scripts = new Set();
   for (const entries of Object.values(config.hooks)) {
     for (const entry of entries) {
       for (const h of entry.hooks) {
         assert.equal(h.type, 'command');
-        assert.equal(h.command, 'node', 'exec form with node keeps paths with spaces working');
-        assert.ok(Array.isArray(h.args) && h.args.length === 1);
-        scripts.add(h.args[0]);
+        const m = /^node "\$\{CLAUDE_PLUGIN_ROOT\}\/(hooks\/[\w-]+\.js)"$/.exec(h.command);
+        assert.ok(m, `unexpected hook command: ${h.command}`);
+        assert.ok(h.timeout > 0 && h.timeout <= 15, 'hooks must have a short timeout');
+        scripts.add(m[1]);
       }
     }
   }
-  for (const script of scripts) {
-    const rel = script.replace('${CLAUDE_PLUGIN_ROOT}/', '');
+  for (const rel of scripts) {
     assert.ok(fs.existsSync(path.join(ROOT, rel)), `${rel} is referenced but missing`);
   }
 });

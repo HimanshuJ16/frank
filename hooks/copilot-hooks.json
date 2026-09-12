@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "node \"${PLUGIN_ROOT}/hooks/inject.js\"",
+        "powershell": "node \"${PLUGIN_ROOT}\\hooks\\inject.js\"",
+        "timeoutSec": 5
+      }
+    ],
+    "userPromptSubmitted": [
+      {
+        "type": "command",
+        "bash": "node \"${PLUGIN_ROOT}/hooks/inject.js\"",
+        "powershell": "node \"${PLUGIN_ROOT}\\hooks\\inject.js\"",
+        "timeoutSec": 5
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "node \"${PLUGIN_ROOT}/hooks/ledger.js\"",
+        "powershell": "node \"${PLUGIN_ROOT}\\hooks\\ledger.js\"",
+        "timeoutSec": 5
+      }
+    ],
+    "agentStop": [
+      {
+        "type": "command",
+        "bash": "node \"${PLUGIN_ROOT}/hooks/gate.js\"",
+        "powershell": "node \"${PLUGIN_ROOT}\\hooks\\gate.js\"",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}

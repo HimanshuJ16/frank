@@ -5,7 +5,7 @@ import { detectClaim, detectReceipt, detectOpener, sanitize } from '../hooks/lib
 // --- must match: these are claims that need a receipt ------------------------
 const CLAIMS = [
   ['Done.', 'completion'],
-  ['Done — the handler now retries twice.', 'completion'],
+  ['Done - the handler now retries twice.', 'completion'],
   ["That's done, moving on.", 'completion'],
   ['All set.', 'completion'],
   ['Finished the migration.', 'completion'],
@@ -112,7 +112,7 @@ const OPENERS = [
   'You are correct.',
   'Great question!',
   "That's a great question.",
-  'Good catch — I missed the nil check.',
+  'Good catch - I missed the nil check.',
   'Excellent point.',
   'I apologize for the confusion.',
 ];

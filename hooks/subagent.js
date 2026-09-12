@@ -1,29 +1,30 @@
 #!/usr/bin/env node
-// SubagentStart: subagents inherit nothing, so they get the short ruleset.
+// SubagentStart: a subagent starts with an empty context, so the rules the
+// parent got at SessionStart never reach it. Give it the short version.
+//
+// FRANK_SUBAGENT_MATCHER scopes this to agent types matching a regex
+// (unanchored, case-insensitive). Unset means every subagent. A regex that
+// does not compile, or a host that reports no agent_type, injects anyway:
+// the failure mode of scoping is a silent drop, and silence is what we are
+// trying to remove.
 import { run } from './lib/io.js';
 import { getMode } from './lib/state.js';
 import { subagentRulesText, frameForInjection } from './lib/ruleset.js';
+import { contextOutput } from './lib/host.js';
 
-/** FRANK_SUBAGENT_MATCHER: unanchored, case-insensitive regex on agent type. */
-function matchesAgent(agentType) {
+function matches(agentType) {
   const pattern = process.env.FRANK_SUBAGENT_MATCHER;
-  if (!pattern) return true;
+  if (!pattern || !agentType) return true;
   try {
-    return new RegExp(pattern, 'i').test(String(agentType || ''));
+    return new RegExp(pattern, 'i').test(String(agentType));
   } catch {
-    return true; // invalid regex: inject anyway
+    return true;
   }
 }
 
 run('subagent', (input) => {
   const mode = getMode();
   if (mode === 'off') return null;
-  if (!matchesAgent(input.agent_type)) return null;
-
-  const context = frameForInjection(subagentRulesText(), mode);
-  if (!context) return null;
-
-  return {
-    hookSpecificOutput: { hookEventName: 'SubagentStart', additionalContext: context },
-  };
+  if (!matches(input.agent_type)) return null;
+  return contextOutput('SubagentStart', mode, frameForInjection(subagentRulesText(), mode));
 });

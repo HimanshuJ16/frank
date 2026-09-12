@@ -1,13 +1,12 @@
 {
-  "description": "Frank: injects the honesty ruleset every turn and gates unverified completion claims.",
   "hooks": {
     "SessionStart": [
       {
+        "matcher": "startup|resume|clear|compact",
         "hooks": [
           {
             "type": "command",
-            "command": "node",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/inject.js"],
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/inject.js\"",
             "timeout": 10,
             "statusMessage": "Frank"
           }
@@ -19,8 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/inject.js"],
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/inject.js\"",
             "timeout": 10,
             "statusMessage": "Frank"
           }
@@ -32,8 +30,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/subagent.js"],
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/subagent.js\"",
             "timeout": 10
           }
         ]
@@ -41,23 +38,11 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Bash|PowerShell",
+        "matcher": "Bash|PowerShell|Edit|Write|MultiEdit|NotebookEdit|apply_patch",
         "hooks": [
           {
             "type": "command",
-            "command": "node",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/ledger.js"],
-            "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/ledger.js"],
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/ledger.js\"",
             "timeout": 10
           }
         ]
@@ -69,8 +54,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/ledger.js"],
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/ledger.js\"",
             "timeout": 10
           }
         ]
@@ -81,10 +65,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/gate.js"],
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/gate.js\"",
             "timeout": 15,
-            "statusMessage": "Frank: checking receipts"
+            "statusMessage": "Frank: checking the receipt"
           }
         ]
       }
@@ -94,8 +77,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/gate.js"],
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/gate.js\"",
             "timeout": 15
           }
         ]
