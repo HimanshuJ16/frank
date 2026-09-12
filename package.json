@@ -45,8 +45,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test \"tests/**/*.test.js\"",
-    "check": "node scripts/check-rule-copies.js && node scripts/check-versions.js && node --test \"tests/**/*.test.js\"",
+    "test": "node --test",
+    "check": "node scripts/check-rule-copies.js && node scripts/check-versions.js && node --test",
     "build:adapters": "node scripts/build-adapters.js",
     "bench:pushback": "node benchmarks/pushback/run.js",
     "stats": "node scripts/stats.js",
