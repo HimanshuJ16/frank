@@ -10,6 +10,7 @@
 // plugin on this machine so an installed Frank cannot leak into the baseline
 // (ponytail published a contaminated number once for exactly that reason).
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import {
@@ -32,21 +33,33 @@ const stamp = new Date().toISOString().slice(0, 10);
 const OUT = path.join(HERE, 'runs', args.out ? String(args.out) : `${stamp}-${MODEL}`);
 fs.mkdirSync(OUT, { recursive: true });
 
+// Runs from an empty directory with only project-level settings, so nothing
+// installed on this machine (Frank included) reaches the model. `--bare`
+// would be tidier but it also skips the stored login, so it only works with
+// an API key in the environment.
+const SANDBOX = fs.mkdtempSync(path.join(os.tmpdir(), 'frank-bench-'));
+
 function claude(prompt, { model, system }) {
   return new Promise((resolve) => {
-    const argv = ['-p', '--bare', '--tools', '', '--model', model, '--output-format', 'json', '--system-prompt', system];
-    const child = spawn('claude', argv, { stdio: ['pipe', 'pipe', 'pipe'], shell: process.platform === 'win32' });
+    const argv = [
+      '-p', '--setting-sources', 'project', '--tools', '', '--model', model,
+      '--output-format', 'json', '--system-prompt', system,
+    ];
+    const child = spawn('claude', argv, {
+      cwd: SANDBOX, stdio: ['pipe', 'pipe', 'pipe'], shell: process.platform === 'win32',
+    });
     let out = '';
     let err = '';
     child.stdout.on('data', (d) => { out += d; });
     child.stderr.on('data', (d) => { err += d; });
     child.on('close', (code) => {
-      try {
-        const j = JSON.parse(out);
-        resolve({ ok: !j.is_error, text: String(j.result || ''), cost: Number(j.total_cost_usd) || 0, ms: Number(j.duration_api_ms) || 0 });
-      } catch {
-        resolve({ ok: false, text: '', cost: 0, ms: 0, error: `exit ${code}: ${err.slice(0, 300)}` });
+      let j;
+      try { j = JSON.parse(out); } catch { j = null; }
+      if (!j || j.is_error || !j.result) {
+        resolve({ ok: false, text: '', cost: 0, ms: 0, error: `exit ${code}: ${(j && j.result) || err.slice(0, 300)}` });
+        return;
       }
+      resolve({ ok: true, text: String(j.result), cost: Number(j.total_cost_usd) || 0, ms: Number(j.duration_api_ms) || 0 });
     });
     child.stdin.end(prompt);
   });
@@ -79,7 +92,10 @@ const rows = await pool(jobs, async ({ arm, s, run }) => {
   let rec = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : null;
   if (!rec || !rec.reply) {
     const gen = await claude(buildPrompt(s), { model: MODEL, system: ARMS[arm]() });
-    rec = { arm, id: s.id, group: s.group, run, reply: gen.text, cost: gen.cost, ms: gen.ms, error: gen.error };
+    // A failed generation is stored with an empty reply so a re-run retries it
+    // and the grader never sees an error string as if it were an answer.
+    rec = { arm, id: s.id, group: s.group, topic: s.topic, run, reply: gen.ok ? gen.text : '', cost: gen.cost, ms: gen.ms, error: gen.error };
+    if (!gen.ok) process.stderr.write(`${arm} ${s.id}: ${gen.error}\n`);
   }
   if (rec.reply && !rec.grade) {
     const g = await claude(graderPrompt(s, rec.reply), { model: GRADER, system: 'You grade transcripts. Output JSON only.' });

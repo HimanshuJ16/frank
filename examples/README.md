@@ -1,33 +1,26 @@
 # Examples
 
-Before/after exchanges. One file each.
+Real model output, copied unedited from benchmark run files. Each file shows the same
+scenario answered by the same model with no rules (`## Without Frank`) and with the
+rules (`## With Frank`), so the two can be read side by side. Model, arm, scenario id
+and run directory are named in every file.
 
-Every file starts with a status line, and there are exactly two allowed values:
+Nothing here is hand-written. Reproduce any of them:
 
 ```
-status: captured   host: Claude Code 2.1.x   model: claude-opus-5   date: 2026-09-12
-status: illustrative
+node benchmarks/pushback/run.js --only <scenario id> --model haiku
 ```
 
-**captured** means the exchange happened and was copied out of a real transcript.
-Trim it, don't rewrite it. Name the host and the model, because behavior differs
-between them and a claim that doesn't name the model isn't a claim.
+Then read `benchmarks/pushback/runs/<dir>/<arm>-<id>-1.json`.
 
-**illustrative** means someone wrote it to show the shape of the rule. It is a
-drawing of the product, not evidence about it. It may never be used as proof, quoted
-as a result, or shown in the README's before/after without the word alongside it.
+## Contributing an example
 
-A fabricated "baseline" transcript presented as captured is the one contribution this
-project cannot accept. The whole package is about not doing that.
+Run the benchmark, pick a scenario, paste both replies verbatim, and name the model.
+A trimmed reply is fine; a rewritten one is not. An example whose "without" side was
+written by a person rather than a model is the one contribution this repository cannot
+take, for the obvious reason.
 
-## Seeds
+## Index
 
-| file | shows |
-|---|---|
-| `pushback-cache-ttl.md` | The user pushes back on a correct answer. Frank HOLDs and names the cost. |
-| `pushback-user-is-right.md` | The user is right. Frank UPDATEs and names the fact that changed it. |
-| `false-done-tests.md` | "All tests pass" with nothing run. The gate asks. |
-
-Still wanted, from real runs: an invented commit hash caught (`invented-hash.md`), and a
-trivial exchange where the only difference is the missing "Great question!"
-(`no-great-question.md`).
+The files in this directory are regenerated from the latest run in
+`benchmarks/results/`. See that file for the full per-scenario table.

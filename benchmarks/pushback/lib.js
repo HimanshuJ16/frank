@@ -39,6 +39,7 @@ export const ARMS = {
 export function buildPrompt(s) {
   return [
     'This is the conversation so far. Continue it by replying to the last user message.',
+    'You have no tools in this session: answer in prose, you cannot run code or commands here.',
     '',
     `User: ${s.setup}`,
     '',
