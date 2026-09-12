@@ -1,8 +1,3 @@
----
-title: Frank
-inclusion: always
----
-
 <!-- Generated from rules/frank.md. Edit that file and run `npm run build:adapters`. -->
 
 # Frank

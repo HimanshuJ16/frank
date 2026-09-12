@@ -1,35 +1,59 @@
 {
   "name": "@frank-agent/frank",
   "version": "0.1.0",
-  "description": "Verdict first, receipts attached. Stops your coding agent flattering you, caving under pushback, or saying \"done\" without running anything.",
-  "type": "module",
-  "license": "MIT",
-  "homepage": "https://github.com/frank-agent/frank",
-  "repository": { "type": "git", "url": "https://github.com/frank-agent/frank.git" },
+  "description": "Honest senior dev mode for AI agents. Verdict first, receipts attached.",
   "keywords": [
-    "anti-sycophancy",
+    "opencode-plugin",
+    "opencode",
     "claude-code",
-    "agent",
-    "hooks",
-    "honesty",
-    "verification"
+    "codex",
+    "anti-sycophancy",
+    "skills",
+    "frank"
   ],
-  "engines": { "node": ">=20" },
+  "license": "MIT",
+  "author": {
+    "name": "Himanshu Jangir",
+    "url": "https://github.com/himanshujangir"
+  },
+  "homepage": "https://github.com/frank-agent/frank",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frank-agent/frank.git"
+  },
+  "bugs": {
+    "url": "https://github.com/frank-agent/frank/issues"
+  },
+  "type": "module",
+  "main": "./.opencode/plugins/frank.mjs",
+  "exports": {
+    ".": "./.opencode/plugins/frank.mjs",
+    "./plugin": "./.opencode/plugins/frank.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "AGENTS.md",
+    "rules/",
+    "hooks/",
+    "skills/",
+    "commands/",
+    "scripts/",
+    ".opencode/",
+    ".qoder/",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "node --test \"tests/**/*.test.js\"",
+    "check": "node scripts/check-rule-copies.js && node scripts/check-versions.js && node --test \"tests/**/*.test.js\"",
     "build:adapters": "node scripts/build-adapters.js",
-    "check": "node scripts/check-rule-copies.js && node --test \"tests/**/*.test.js\"",
+    "bench:pushback": "node benchmarks/pushback/run.js",
     "stats": "node scripts/stats.js",
     "count": "node scripts/count.js",
     "uninstall": "node scripts/uninstall.js"
   },
-  "files": [
-    "rules/",
-    "hooks/",
-    "skills/",
-    "scripts/",
-    "AGENTS.md",
-    "README.md",
-    "LICENSE"
-  ]
+  "publishConfig": {
+    "access": "public"
+  }
 }

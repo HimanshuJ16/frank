@@ -1,0 +1,13 @@
+{
+  "name": "frank",
+  "description": "Honest senior dev mode for AI agents. Verdict first, receipts attached.",
+  "owner": { "name": "Himanshu Jangir", "url": "https://github.com/himanshujangir" },
+  "plugins": [
+    {
+      "name": "frank",
+      "description": "No flattery, no caving under pushback, no \"done\" without a command that ran.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

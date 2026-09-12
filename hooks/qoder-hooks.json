@@ -1,0 +1,17 @@
+{
+  "_comment": "Template. Copy the hooks object into .qoder/settings.json or ~/.qoder/settings.json and replace FRANK_DIR with the path to your frank checkout.",
+  "hooks": {
+    "UserPromptSubmit": [
+      { "hooks": [ { "type": "command", "command": "node FRANK_DIR/hooks/inject.js" } ] }
+    ],
+    "PreToolUse": [
+      { "matcher": "task|Task", "hooks": [ { "type": "command", "command": "node FRANK_DIR/hooks/subagent.js" } ] }
+    ],
+    "PostToolUse": [
+      { "matcher": "Bash|Edit|Write", "hooks": [ { "type": "command", "command": "node FRANK_DIR/hooks/ledger.js" } ] }
+    ],
+    "Stop": [
+      { "hooks": [ { "type": "command", "command": "node FRANK_DIR/hooks/gate.js" } ] }
+    ]
+  }
+}

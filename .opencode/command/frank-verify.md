@@ -1,0 +1,5 @@
+---
+description: Find and run the verification for the last change, then write the receipt
+---
+
+Find the command that verifies the change just made (the repo's test script, typecheck, or build). Prefer the narrowest command that covers the change. Run it for real. End with the receipt: ran: <exact command> / result: <real summary>. If nothing can verify it, end with unverified: <the check that would settle it> and offer to write that check. $ARGUMENTS

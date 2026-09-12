@@ -1,5 +1,17 @@
+# keys
+.env
+.env.*
+!.env.example
+
 node_modules/
-.tmp-home/
+
+# benchmark scratch: raw generations and per-run workspaces stay local
+benchmarks/pushback/runs/
+benchmarks/agentic/runs/
+.promptfoo/
+
+# local Claude Code permission grants
+.claude/settings.local.json
+
 *.log
-benchmarks/results/*.json
 .DS_Store

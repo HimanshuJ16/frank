@@ -1,0 +1,13 @@
+{
+  "name": "frank",
+  "version": "0.1.0",
+  "description": "Verdict first, receipts attached. No flattery, no caving under pushback, no \"done\" without a command that proves it.",
+  "author": { "name": "Himanshu Jangir", "url": "https://github.com/himanshujangir" },
+  "homepage": "https://github.com/frank-agent/frank",
+  "repository": "https://github.com/frank-agent/frank",
+  "license": "MIT",
+  "keywords": ["anti-sycophancy", "honesty", "verification", "code-review"],
+  "commands": "commands/",
+  "skills": "skills/",
+  "hooks": "hooks/copilot-hooks.json"
+}
