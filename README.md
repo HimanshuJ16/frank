@@ -17,8 +17,8 @@
 
 <!-- numbers:start -->
 <p align="center">
-  <strong>Unverified "done": 33% to 0% &middot; Caves under pushback: 12% to 0% &middot; "You're right" openers: 39 to 0 of 60 &middot; Receipts: 0 to 11 of 12</strong><br>
-  <sub>Measured on real headless Claude Code sessions (Haiku 4.5) editing a real open-source repo, the same FastAPI + React template and the same twelve tickets ponytail used, against the same agent with no plugin; and on 60 hand-written pushback scenarios graded by Sonnet. Every Frank receipt was re-run afterwards and every one was true. The cost: Frank sessions take 26% more money and 59% more time, because they run the tests instead of saying they did. n=1 per cell; the range is in the per-ticket tables. <a href="benchmarks/results/2026-09-12-agentic.md">Receipts writeup</a> &middot; <a href="benchmarks/results/2026-09-12-pushback.md">Pushback writeup</a> &middot; <a href="benchmarks/">reproduce it</a>.</sub>
+  <strong>Unverified "done": 49% to 0% &middot; Receipts: 0 to 44 of 48 &middot; Caves under pushback: 12% to 0% &middot; "You're right" openers: 39 to 0 of 60</strong><br>
+  <sub>Measured on 96 real headless Claude Code sessions (Haiku 4.5, n=4) editing a real open-source repo, the same FastAPI + React template and the same twelve tickets ponytail used, against the same agent with no plugin; and on 60 hand-written pushback scenarios graded by Sonnet. Every one of the 44 Frank receipts was re-run afterwards and every one was true. The cost: Frank sessions take about a third more money and half again as much time, because they run the tests instead of saying they did. Range across runs: baseline unverified 33% to 67%, Frank 0% in every run. <a href="benchmarks/results/2026-09-12-agentic.md">Receipts writeup</a> &middot; <a href="benchmarks/results/2026-09-12-pushback.md">Pushback writeup</a> &middot; <a href="benchmarks/">reproduce it</a>.</sub>
 </p>
 <!-- numbers:end -->
 
@@ -93,27 +93,31 @@ the workspace are scored with no model in the loop, and every command a receipt 
 run again.
 
 <p align="center">
-  <img src="assets/benchmark-agentic.svg" width="860" alt="Receipts benchmark: unverified done 4/12 baseline vs 0/7 frank; verified after last edit 8/12 vs 12/12; ended with a receipt 0/12 vs 11/12; cost 126% and time 159% of baseline">
+  <img src="assets/benchmark-agentic.svg" width="860" alt="Receipts benchmark, 96 sessions: unverified done 23 of 47 baseline vs 0 of 27 frank; verified after last edit 25 of 48 vs 46 of 48; ended with a receipt 0 of 48 vs 44 of 48; cost 132% and time 222% of baseline">
 </p>
 
-| per session, 12 tickets | baseline | frank |
+| 12 tickets, 4 runs each | baseline | frank |
 |---|--:|--:|
-| claimed "done" with nothing run after the last edit | **4 / 12** | **0 / 7** |
-| ran a verification after the last edit | 8 / 12 | 12 / 12 |
-| ended with a `ran:` / `result:` receipt | 0 / 12 | 11 / 12 |
-| receipt cited a command that never ran | 0 | 0 |
-| receipt disagreed with a re-run | 0 | 0 |
+| claimed "done" with nothing run after the last edit | **23 / 47 (49%)** | **0 / 27** |
+| same, range across the four runs | 33% to 67% | 0% every run |
+| ran a verification after the last edit | 25 / 48 | 46 / 48 |
+| ended with a `ran:` / `result:` receipt | 0 / 48 | 44 / 48 |
+| receipt cited a command that never ran, or disagreed with a re-run | 0 | 0 |
+| claimed done after its only test run had failed | 1 | 0 |
 | invented line numbers or commit hashes | 0 | 0 |
-| Stop hook interventions | n/a | 9 |
-| mean cost | $0.25 | $0.32 (+26%) |
-| mean wall time | 129s | 205s (+59%) |
+| Stop hook interventions | n/a | 34 |
+| hit the 60-turn cap | 1 | 4 |
+| mean cost | $0.25 | $0.34 (+32%) |
+| mean wall time, runs unaffected by a local Docker outage | 129s | 205s (+59%) |
+| mean wall time, all four runs | 128s | 284s (+122%) |
 
-Five of the seven Frank sessions that claimed done were handed back once by the gate and
-came back with a test run. Two Frank sessions hit the 60-turn cap, one after it had
-already written its receipt, the other still working.
+The gate handed a draft back 34 times across 48 sessions; the session then ran the tests.
 Frank is slower and dearer per session because it runs the suite instead of describing
-it; that is the product, not a side effect. Per-ticket table, limitations and the exact
-commands: [benchmarks/results/2026-09-12-agentic.md](benchmarks/results/2026-09-12-agentic.md).
+it; that is the product, not a side effect. Two of the four runs happened while Docker
+on the test machine died and came back, and two Frank sessions spent half an hour each
+waiting on a database that wasn't there, which is why the two time rows differ. Per-ticket
+table, limitations and the exact commands:
+[benchmarks/results/2026-09-12-agentic.md](benchmarks/results/2026-09-12-agentic.md).
 
 The pushback half is measured separately: 60 hand-written scenarios where the developer
 pushes back on an answer, 25 times wrongly, 25 times rightly, 10 times on something
@@ -135,11 +139,13 @@ Read the first two rows together. A rule that cut caving by making the model dig
 show up as a higher stubborn rate; it did not. Writeup:
 [benchmarks/results/2026-09-12-pushback.md](benchmarks/results/2026-09-12-pushback.md).
 
-**Read these numbers with the limits attached.** One model, n=1 per cell, scenarios written
-by the same people who wrote the rules, and a first pushback run that was thrown out because
-the runner lost the system prompt on Windows ([ADR-020](docs/decisions.md)). Both charts are
-generated from the run files by `node benchmarks/charts.js`; nothing in them was drawn by
-hand.
+**Read these numbers with the limits attached.** One model; four runs per ticket for the
+receipts tier and one per scenario for pushback; scenarios written by the same people who
+wrote the rules; a first pushback run that was thrown out because the runner lost the
+system prompt on Windows ([ADR-020](docs/decisions.md)); and a scorer that was wrong
+about Frank's receipts six ways before it was right, each way now a test case
+([ADR-022](docs/decisions.md)). Both charts are generated from the run files by
+`node benchmarks/charts.js`; nothing in them was drawn by hand.
 
 ## What it does
 
@@ -343,7 +349,7 @@ Latest run of the suite (Node 22.10.0, Windows 11, 2026-09-12):
 
 ```
 ran: node scripts/check-rule-copies.js && node scripts/check-versions.js && node --test
-result: 13 adapters match rules/frank.md; 7 version files at 0.1.0; 270 passed, 0 failed
+result: 13 adapters match rules/frank.md; 7 version files at 0.1.0; 272 passed, 0 failed
 ```
 
 The benchmark: [benchmarks/](benchmarks/). It runs on a Claude Code login, no API key.

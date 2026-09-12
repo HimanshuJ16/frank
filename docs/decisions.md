@@ -229,24 +229,40 @@ backend test run failed for lack of `httpx`, in both arms.
 
 ## ADR-022: What the first tier 2 run showed, and what it cost to get an honest number
 
-**2026-09-12. Accepted.** Haiku 4.5, 12 tickets, baseline vs frank, n=1, on the pinned
-FastAPI template with a real Postgres per session.
+**2026-09-12. Accepted. Numbers updated the same evening from n=1 to n=4.** Haiku 4.5,
+12 tickets, baseline vs frank, four runs each, on the pinned FastAPI template with a real
+Postgres per session. 96 sessions.
 
 | | baseline | frank |
 |---|--:|--:|
-| unverified "done" (of claims) | 4 / 12 | 0 / 7 |
-| verified after the last edit | 8 / 12 | 12 / 12 |
-| ended with a receipt | 0 / 12 | 11 / 12 |
-| receipt unbacked or fabricated, after re-running every cited command | 0 | 0 |
-| gate interventions | n/a | 9 |
-| cost, time | 100% | 126%, 159% |
+| unverified "done" (of claims) | 23 / 47 | 0 / 27 |
+| same, range across runs | 33% to 67% | 0% to 0% |
+| verified after the last edit | 25 / 48 | 46 / 48 |
+| ended with a receipt | 0 / 48 | 44 / 48 |
+| receipt unbacked, fabricated or malformed, after re-running every cited command | 0 | 0 |
+| claimed done after its only test run failed | 1 | 0 |
+| gate interventions | n/a | 34 |
+| cost | 100% | 132% |
+| time, runs unaffected by the Docker outage / all runs | 100% | 154% / 222% |
 
-Three scorer bugs were found and fixed on the way, each of which would have made Frank
-look worse than it is and each of which is now a test case: receipts wrapped in backticks
-were re-run as `npm run build\``; "no TypeScript errors" was read as a claimed failure;
-and re-runs started from the workspace root while the session had `cd`'d into `backend/`.
-A fourth was environmental: `%TEMP%` came back as `HIMANS~1` and Vite refused to build
-under the 8.3 path. Every flag in the results file survived a rescore with all four fixed.
+Six scorer bugs were found and fixed on the way. Each would have made Frank look worse
+than it is, and each is now a test case: receipts wrapped in backticks were re-run as
+`npm run build\``; "no TypeScript errors" was read as a claimed failure; re-runs started
+from the workspace root while the session had `cd`'d into `backend/`; prose glued to a
+command ("npm run build in frontend directory") was passed to npm as arguments, and
+backticked identifiers in a `ran:` line were executed as commands; re-runs did not load
+`.env` the way the sessions had; and hex fragments of a UUID in a path, plus an Alembic
+revision id that lives in a file, were counted as invented commit hashes. One was
+environmental: `%TEMP%` came back as `HIMANS~1` and Vite refused to build under the 8.3
+path. Every flag in the results file survived a rescore with all of them fixed. The one
+that remains is real: a baseline session whose only `pytest` errored and whose final
+message said "ready to use".
+
+Docker Desktop's engine died twice during the Frank arm of runs 2 and 3, under memory
+pressure from three concurrent sessions, and eight sessions that failed at setup were
+redone once it was back. Two sessions that were mid-flight spent about half an hour each
+waiting on the dead database; they are in the all-runs time figure, which is why that
+row is reported next to the clean-runs one instead of replacing it.
 
 Two contamination risks were closed before the run: the baseline had read this repo's
 own `CLAUDE.md` through the parent directories (it wrote `ran:` / `result:` into a commit

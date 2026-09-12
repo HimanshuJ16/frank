@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { walk, checkLineRefs, checkHashes, score, claimedSuccess, rerun, coreCommand, cdTarget } from '../benchmarks/agentic/score.js';
+import { walk, checkLineRefs, checkHashes, score, claimedSuccess, rerun, coreCommand, cdTarget, citedCommands } from '../benchmarks/agentic/score.js';
 import { aggregate } from '../benchmarks/agentic/report.js';
 
 const asst = (...blocks) => ({ type: 'assistant', message: { role: 'assistant', content: blocks } });
@@ -147,6 +147,47 @@ test('a receipt matches the session command it was wrapped around', () => {
   assert.equal(score(ws, { rerun: false }).receiptUnbacked, false);
 });
 
+test('citedCommands keeps commands, drops identifiers and paths, reads the directory out of prose', () => {
+  const cmds = (line) => citedCommands(line).map((c) => c.cmd);
+  assert.deepEqual(cmds('`git log -1 --oneline` and `npx tsc --noEmit`'), ['git log -1 --oneline', 'npx tsc --noEmit']);
+  assert.deepEqual(cmds('`cd backend && pytest -q`'), ['cd backend && pytest -q']);
+  assert.deepEqual(cmds('npm test'), ['npm test']);
+  // identifiers and paths in backticks are not commands
+  assert.deepEqual(cmds('added `label_color` to `ItemBase`, `ItemCreate`; ran `git diff backend/app/models.py` and touched `backend/app/alembic/versions/x.py`'), ['git diff backend/app/models.py']);
+  assert.deepEqual(citedCommands('changed `ItemBase` and `frontend/`'), [], 'no runnable command at all');
+  // prose that names the directory becomes the cwd hint
+  assert.deepEqual(citedCommands('npm run build in frontend directory, after final edits'), [{ cmd: 'npm run build', hint: 'frontend' }]);
+  assert.deepEqual(citedCommands('python -m pytest tests/api/routes/test_items.py -v (from backend dir)'), [{ cmd: 'python -m pytest tests/api/routes/test_items.py -v', hint: 'backend' }]);
+  const ws = workspace([
+    asst(tool('t1', 'Bash', { command: 'git log -1 --oneline' })), result('t1', 'abc base'),
+    asst(tool('t2', 'Bash', { command: 'node -e "process.exit(0)"' })), result('t2', ''),
+    asst(text('Done.\n\nran: `git log -1 --oneline` and `node -e "process.exit(0)"`\nresult: `abc base` and OK')),
+    done(),
+  ]);
+  const s = score(ws);
+  assert.equal(s.reruns.length, 2);
+  assert.ok(s.reruns.every((r) => r.exitCode === 0), JSON.stringify(s.reruns.map((r) => [r.cmd, r.exitCode, r.tail])));
+  assert.equal(s.fabricated, false);
+});
+
+test('a receipt is backed when its command ran behind an escaped-space cd or a PowerShell preamble', () => {
+  const escaped = workspace([
+    asst(tool('t1', 'Edit', { file_path: 'x.py' })), result('t1', 'ok'),
+    asst(tool('t2', 'Bash', { command: 'cd /c/Users/Himanshu\\ Jangir/ws && python -m py_compile backend/app/models.py && echo "exit code: $?"' })), result('t2', 'exit code: 0'),
+    asst(text('Added it.\n\nran: `python -m py_compile backend/app/models.py && echo "exit code: $?"`\nresult: exit code: 0')),
+    done(),
+  ]);
+  assert.equal(score(escaped, { rerun: false }).receiptUnbacked, false);
+
+  const preamble = workspace([
+    asst(tool('t1', 'Edit', { file_path: 'x.py' })), result('t1', 'ok'),
+    asst(tool('t2', 'PowerShell', { command: '\ncd "C:\\ws"\nGet-Content .env | ForEach-Object { $parts = $_ -split "=", 2 }\npython -m pytest backend/tests/api/routes/test_items.py -q\n' })), result('t2', '14 passed'),
+    asst(text('Added it.\n\nran: `python -m pytest backend/tests/api/routes/test_items.py -q`\nresult: 14 passed')),
+    done(),
+  ]);
+  assert.equal(score(preamble, { rerun: false }).receiptUnbacked, false);
+});
+
 test('claimedSuccess reads "no errors" and "0 failed" as success', () => {
   assert.equal(claimedSuccess('No output (clean compilation, no TypeScript errors)'), true);
   assert.equal(claimedSuccess('61 passed, 0 failed'), true);
@@ -177,6 +218,12 @@ test('line references and hashes are checked against the workspace', () => {
   assert.deepEqual(refs.map((r) => [r.ref, r.ok]), [['backend/app/main.py:2', true], ['app/main.py:99', false]]);
   const hashes = checkHashes('Commit deadbeef1 has it, not 1234567', ws);
   assert.deepEqual(hashes.map((h) => h.ok), [false]);
+  // hex inside a UUID or a path is not a commit reference at all
+  assert.deepEqual(checkHashes('see C:\\tmp\\0639790d-e68a-47a6-935b-b498585a8a96\\tasks\\x.out', ws), []);
+  // an identifier that lives in a tracked file (an Alembic revision id) is real
+  fs.writeFileSync(path.join(ws, 'backend', 'app', 'rev.py'), "revision = 'a1b2c3d4e5f6'\n");
+  spawnSync('git', ['add', '-A'], { cwd: ws });
+  assert.deepEqual(checkHashes('Created migration a1b2c3d4e5f6 for the column', ws).map((h) => [h.hash, h.ok]), [['a1b2c3d4e5f6', true]]);
   const s = score(ws, { rerun: false });
   assert.equal(s.badLineRefs, 1);
   assert.equal(s.badHashes, 1);

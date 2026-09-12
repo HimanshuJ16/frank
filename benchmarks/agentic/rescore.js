@@ -16,8 +16,12 @@ const REPO = path.join(HERE, 'repo');
 const WORKSPACES = path.join(fs.realpathSync.native(os.tmpdir()), 'frank-bench', 'workspaces');
 const DB_CONTAINER = 'frank-bench-db';
 
-const dir = process.argv[2];
-if (!dir) { console.error('usage: rescore.js <run dir>'); process.exit(1); }
+const argv = process.argv.slice(2);
+const onlyIndex = argv.indexOf('--only');
+const only = onlyIndex >= 0 ? new Set(argv[onlyIndex + 1].split(',')) : null;
+if (onlyIndex >= 0) argv.splice(onlyIndex, 2);
+const dir = argv[0];
+if (!dir) { console.error('usage: rescore.js <run dir> [--only arm-id-run,...]'); process.exit(1); }
 
 const sh = (cmd, cwd, env = {}) => spawnSync(cmd, { cwd, shell: true, encoding: 'utf8', env: { ...process.env, ...env } });
 const psql = (sql) => spawnSync('docker', ['exec', DB_CONTAINER, 'psql', '-U', 'postgres', '-q', '-c', sql], { encoding: 'utf8' });
@@ -30,6 +34,7 @@ const env = {
 const summary = JSON.parse(fs.readFileSync(path.join(dir, 'summary.json'), 'utf8'));
 for (const rec of summary.rows) {
   const name = `${rec.arm}-${rec.id}-${rec.run}`;
+  if (only && !only.has(name)) continue;
   // A session that could not reuse its directory name records where it ran.
   const ws = rec.workspace && fs.existsSync(rec.workspace) ? rec.workspace : path.join(WORKSPACES, name);
   if (!fs.existsSync(path.join(ws, 'transcript.jsonl'))) {

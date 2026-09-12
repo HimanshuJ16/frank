@@ -132,29 +132,41 @@ with `POSTGRES_PORT=55432` in the clone's `.env`. Needs a Claude Code login and 
 
 ### Results
 
-**2026-09-12, Haiku 4.5, n=1, 24 sessions**
+**2026-09-12, Haiku 4.5, n=4, 96 sessions**
 ([results/2026-09-12-agentic.md](results/2026-09-12-agentic.md)):
 
 | | baseline | frank |
 |---|--:|--:|
-| claimed done | 12 / 12 | 7 / 12 |
-| unverified claims, of claims | 4 (33%) | 0 |
-| ran a verification after the last edit | 8 / 12 | 12 / 12 |
-| ended with a receipt | 0 / 12 | 11 / 12 |
-| receipt unbacked or fabricated | 0 | 0 |
-| invented line refs or hashes | 0 | 0 |
-| gate interventions | n/a | 9 |
-| hit the 60-turn cap | 0 | 2 |
-| mean cost | $0.25 | $0.32 (126%) |
-| mean wall time | 129s | 205s (159%) |
+| claimed done | 47 / 48 | 27 / 48 |
+| unverified claims, of claims | 23 (49%) | 0 |
+| same, range across runs | 33% to 67% | 0% to 0% |
+| ran a verification after the last edit | 25 / 48 (52%) | 46 / 48 (96%) |
+| ended with a receipt | 0 / 48 | 44 / 48 |
+| receipt unbacked, fabricated or malformed | 0 | 0 |
+| claimed done after its only test run failed | 1 | 0 |
+| invented line refs or hashes | 0 / 3 | 0 / 18 |
+| gate interventions | n/a | 34 |
+| hit the 60-turn cap | 1 | 4 |
+| mean cost | $0.25 | $0.34 (132%) |
+| mean wall time, runs 1 and 4 | 147s | 227s (154%) |
+| mean wall time, all runs | 128s | 284s (222%) |
 
-Where Frank did not help: the eight baseline sessions that verified on their own were
-fine without it, and two Frank sessions ran out of turns, one of them after it had
-already written its receipt. Where it cost: a quarter more money and half again as much
-time per session, spent running suites the baseline described instead.
+Where Frank did not help: the 25 baseline sessions that verified on their own were fine
+without it, and four Frank sessions ran out of turns. Where it cost: a third more money
+per session, and half again as much time in the two runs that were not affected by
+Docker dying on the test machine. Runs 2 and 3 were: two Frank sessions each spent about
+half an hour waiting for a database that had gone away, which is what the all-runs time
+row is showing. It is reported rather than trimmed, and the per-run figures are in the
+results file.
 
-Next files to add: n=4 to get a range, Sonnet, `frank-lite` as a third arm, and
-`codex exec`.
+The scorer was wrong about Frank six ways before it was right (backticks, prose glued to
+commands, "no errors" read as failure, the wrong working directory, `.env` not loaded for
+re-runs, UUID fragments and Alembic revision ids read as commit hashes). Each is a test
+case now, and every flag in the results file survived a rescore with all six fixed. One
+flag did: a baseline session whose only `pytest` errored and whose final message said
+"ready to use".
+
+Next files to add: Sonnet, `frank-lite` as a third arm, and `codex exec`.
 
 ## Reporting rules
 
