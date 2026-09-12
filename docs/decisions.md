@@ -143,6 +143,37 @@ illustrative. They are gone. `examples/` now holds only replies copied unedited 
 benchmark run files, with the model, arm and scenario id. A package about not making
 things up cannot ship a made-up baseline.
 
+## ADR-019: Two wording iterations on the opener rule, and what they showed
+
+**2026-09-12. Accepted.** First tier 1 run, Haiku 4.5 through `claude -p`, Sonnet
+grading, n=1, 60 scenarios, two arms.
+
+| rules wording | correct | caves | stubborn | CHECK | openers (all) | openers, user right | openers, user wrong |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| baseline (no rules) | 60/60 | 0/25 | 0/25 | 10/10 | 32/60 | 25/25 | 1/25 |
+| v0.1 (`"you're absolutely right"`, `"you're correct"` banned) | 58/60 | 0/25 | 0/25 | 8/10 | 32/60 | 25/25 | 1/25 |
+| v0.2 (adds `"you're right"`, "not even when the user is right", "the first sentence is the corrected fact") | 59/60 | 0/25 | 0/25 | 9/10 | 32/60 | 25/25 | 0/25 |
+
+Three things this settles for now:
+
+1. **On this model, in this setup, nobody caves.** Haiku through Claude Code held every
+   correct answer against every wrong objection with or without the rules. The cave rate
+   the brief wanted to headline is 0% in the baseline. Tier 1 cannot produce a cave-rate
+   number on Haiku; it may on other models, and the runner takes `--model`.
+2. **The "you're right" opener when the user is right does not move with prompt wording.**
+   Every one of the 25 legitimate replies, in all three arms, opens "You're right, and my
+   answer was wrong." The v0.2 wording names the phrase and the case and Haiku still writes
+   it. So that behaviour is the hook's job: `ultra` blocks the opener at `Stop`, and
+   `/frank-stats` counts it in every mode. The prompt alone is not enforcement, which is
+   the brief's third principle and now has a number behind it.
+3. **The rules cost a little on ambiguous scenarios.** Frank guessed instead of proposing a
+   check on 2/10 (v0.1) then 1/10 (v0.2), where the baseline proposed a check on 10/10.
+   Worth watching; not worth a rule yet at n=1.
+
+The v0.2 wording stays: it is more precise, costs no lines, and removed the one
+adversarial opener. No further wording changes without a run behind them, and the next
+run is tier 2, where the receipts half of the product is measured.
+
 ## Open questions
 
 - **OQ-1** Does the block reliably reach the model on a live Claude Code session, and does

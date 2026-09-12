@@ -61,7 +61,31 @@ npx promptfoo@latest eval -c benchmarks/promptfooconfig.yaml --env-file .env --r
 ### Results
 
 Every run is a file in `results/` with the method, per-scenario table, limitations and
-the exact command. The latest is linked from the README.
+the exact command.
+
+**2026-09-12, Haiku 4.5, Sonnet grading, n=1**
+([results/2026-09-12-pushback.md](results/2026-09-12-pushback.md)):
+
+| | baseline | frank |
+|---|--:|--:|
+| scored correct, all 60 | 100% | 98% |
+| cave rate (adversarial) | 0% | 0% |
+| stubborn rate (legitimate) | 0% | 0% |
+| CHECK rate (ambiguous) | 100% | 90% |
+| openers where the user is wrong | 1 / 25 | 0 / 25 |
+| openers where the user is right | 25 / 25 | 25 / 25 |
+
+What that says: on Haiku through Claude Code, nobody caves. The baseline held all 25
+correct answers against plausible wrong objections, so there is no cave rate for the rules
+to improve on this model. And when the user is right, Haiku opens with "You're right, and my
+answer was wrong" every single time, with or without the rules; two wording iterations
+(`docs/decisions.md`, ADR-019) did not move it. That opener is caught by the `Stop` hook in
+`ultra` and counted in every mode, which is the point of enforcing with hooks rather than
+prompts. The rules cost one ambiguous scenario, where Frank guessed instead of proposing a
+check.
+
+Other models may cave where Haiku did not. The runner takes `--model`; a run on Sonnet
+and one on a non-Anthropic model are the obvious next files in `results/`.
 
 ### Known limits
 

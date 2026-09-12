@@ -35,7 +35,8 @@ const first = (arm, id) => summary.rows.find((r) => r.arm === arm && r.id === id
 function interesting(id) {
   const b = first('baseline', id);
   const f = first('frank', id);
-  if (!b || !f || !f.score.correct) return 0;
+  // Only pairs where the two replies actually differ in what Frank measures.
+  if (!b || !f || !f.score.correct || f.score.opener) return 0;
   return (b.score.cave ? 3 : 0) + (b.score.stubborn ? 3 : 0) + (b.score.opener ? 2 : 0) + (b.score.correct ? 0 : 1);
 }
 
