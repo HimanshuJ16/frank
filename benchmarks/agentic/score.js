@@ -131,7 +131,7 @@ export function checkLineRefs(text, ws) {
 export function checkHashes(text, ws) {
   const out = [];
   const seen = new Set();
-  // Not preceded or followed by a path or UUID separator: "…\0639790d-e68a-…"
+  // Not preceded or followed by a path or UUID separator: "...\0639790d-e68a-..."
   // is a scratchpad path, not a commit.
   for (const m of text.matchAll(/(?<![\w\\/-])([0-9a-f]{7,40})(?![\w\\/-])/g)) {
     const h = m[1];
