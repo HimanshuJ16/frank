@@ -7,8 +7,11 @@ import { fileURLToPath } from 'node:url';
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const SOURCE = path.join(ROOT, 'rules', 'frank.md');
 
+/** Line endings are normalized everywhere here: a CRLF checkout must not read as drift. */
+const lf = (text) => text.replace(/\r\n/g, '\n');
+
 export function rules() {
-  return fs.readFileSync(SOURCE, 'utf8').trim();
+  return lf(fs.readFileSync(SOURCE, 'utf8')).trim();
 }
 
 const NOTE = 'Generated from rules/frank.md. Edit that file and run `npm run build:adapters`.';
@@ -51,7 +54,7 @@ export function render(target, body) {
 
 export function readTarget(target) {
   try {
-    return fs.readFileSync(path.join(ROOT, target), 'utf8');
+    return lf(fs.readFileSync(path.join(ROOT, target), 'utf8'));
   } catch {
     return null;
   }

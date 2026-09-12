@@ -29,6 +29,20 @@ for (const target of Object.keys(TARGETS)) {
   });
 }
 
+test('a CRLF checkout does not read as drift', () => {
+  const target = path.join(ROOT, 'AGENTS.md');
+  const original = fs.readFileSync(target, 'utf8');
+  try {
+    fs.writeFileSync(target, original.replace(/\r?\n/g, '\r\n'));
+    const res = spawnSync(process.execPath, [path.join(ROOT, 'scripts', 'check-rule-copies.js')], {
+      encoding: 'utf8',
+    });
+    assert.equal(res.status, 0, res.stderr);
+  } finally {
+    fs.writeFileSync(target, original);
+  }
+});
+
 test('check-rule-copies fails when an adapter drifts', () => {
   const target = path.join(ROOT, 'AGENTS.md');
   const original = fs.readFileSync(target, 'utf8');

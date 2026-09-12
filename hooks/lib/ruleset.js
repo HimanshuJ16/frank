@@ -11,7 +11,7 @@ let cached = null;
 export function rulesText() {
   if (cached !== null) return cached;
   try {
-    cached = fs.readFileSync(RULES_FILE, 'utf8').trim();
+    cached = fs.readFileSync(RULES_FILE, 'utf8').replace(/\r\n/g, '\n').trim();
   } catch {
     cached = '';
   }
