@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/stars/HimanshuJ16/frank?style=flat-square&color=111111&label=stars" alt="Stars">
+  <img src="https://img.shields.io/github/stars/HimanshuJ16/frank?style=flat-square&color=111111&label=stars&cacheSeconds=3600" alt="Stars">
   <img src="https://img.shields.io/npm/v/@himanshujangir/frank?style=flat-square&color=111111&label=npm" alt="npm">
   <img src="https://img.shields.io/badge/works%20with-20%20agents-111111?style=flat-square" alt="Works with 20 agents">
   <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT license">
