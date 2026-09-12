@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "frank",
+  "displayName": "Frank",
+  "version": "0.1.0",
+  "description": "Verdict first, receipts attached. Stops the agent flattering you, caving under pushback, or saying \"done\" without running anything.",
+  "author": { "name": "Frank contributors" },
+  "homepage": "https://github.com/frank-agent/frank",
+  "repository": "https://github.com/frank-agent/frank",
+  "license": "MIT",
+  "keywords": ["anti-sycophancy", "honesty", "verification", "receipts", "behavior"],
+  "hooks": "./hooks/hooks.json"
+}

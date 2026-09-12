@@ -1,0 +1,35 @@
+{
+  "name": "@frank-agent/frank",
+  "version": "0.1.0",
+  "description": "Verdict first, receipts attached. Stops your coding agent flattering you, caving under pushback, or saying \"done\" without running anything.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/frank-agent/frank",
+  "repository": { "type": "git", "url": "https://github.com/frank-agent/frank.git" },
+  "keywords": [
+    "anti-sycophancy",
+    "claude-code",
+    "agent",
+    "hooks",
+    "honesty",
+    "verification"
+  ],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.js\"",
+    "build:adapters": "node scripts/build-adapters.js",
+    "check": "node scripts/check-rule-copies.js && node --test \"tests/**/*.test.js\"",
+    "stats": "node scripts/stats.js",
+    "count": "node scripts/count.js",
+    "uninstall": "node scripts/uninstall.js"
+  },
+  "files": [
+    "rules/",
+    "hooks/",
+    "skills/",
+    "scripts/",
+    "AGENTS.md",
+    "README.md",
+    "LICENSE"
+  ]
+}

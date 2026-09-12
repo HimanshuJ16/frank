@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "frank",
+  "description": "Frank: the agent behavior package for honesty.",
+  "owner": { "name": "Frank contributors", "url": "https://github.com/frank-agent/frank" },
+  "plugins": [
+    {
+      "name": "frank",
+      "source": "./",
+      "description": "Verdict first, receipts attached. No sycophancy, no caving, no unverified \"done\".",
+      "category": "workflow",
+      "tags": ["anti-sycophancy", "honesty", "verification"]
+    }
+  ]
+}
