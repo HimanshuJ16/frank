@@ -1,7 +1,7 @@
 {
   "name": "frank",
   "description": "Honest senior dev mode for AI agents. Verdict first, receipts attached.",
-  "owner": { "name": "Himanshu Jangir", "url": "https://github.com/himanshujangir" },
+  "owner": { "name": "Himanshu Jangir", "url": "https://github.com/HimanshuJ16" },
   "plugins": [
     {
       "name": "frank",

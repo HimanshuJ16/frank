@@ -1,5 +1,5 @@
 {
-  "name": "@frank-agent/frank",
+  "name": "@himanshuj16/frank",
   "version": "0.1.0",
   "description": "Honest senior dev mode for AI agents. Verdict first, receipts attached.",
   "keywords": [
@@ -14,15 +14,15 @@
   "license": "MIT",
   "author": {
     "name": "Himanshu Jangir",
-    "url": "https://github.com/himanshujangir"
+    "url": "https://github.com/HimanshuJ16"
   },
-  "homepage": "https://github.com/frank-agent/frank",
+  "homepage": "https://github.com/HimanshuJ16/frank",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/frank-agent/frank.git"
+    "url": "git+https://github.com/HimanshuJ16/frank.git"
   },
   "bugs": {
-    "url": "https://github.com/frank-agent/frank/issues"
+    "url": "https://github.com/HimanshuJ16/frank/issues"
   },
   "type": "module",
   "main": "./.opencode/plugins/frank.mjs",

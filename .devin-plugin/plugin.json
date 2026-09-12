@@ -2,9 +2,9 @@
   "name": "frank",
   "version": "0.1.0",
   "description": "Verdict first, receipts attached. No flattery, no caving under pushback, no \"done\" without a command that proves it.",
-  "author": { "name": "Himanshu Jangir", "url": "https://github.com/himanshujangir" },
-  "homepage": "https://github.com/frank-agent/frank",
-  "repository": "https://github.com/frank-agent/frank",
+  "author": { "name": "Himanshu Jangir", "url": "https://github.com/HimanshuJ16" },
+  "homepage": "https://github.com/HimanshuJ16/frank",
+  "repository": "https://github.com/HimanshuJ16/frank",
   "license": "MIT",
   "keywords": ["anti-sycophancy", "honesty", "verification", "code-review"]
 }

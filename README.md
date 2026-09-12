@@ -9,9 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/stars/frank-agent/frank?style=flat-square&color=111111&label=stars" alt="Stars">
-  <img src="https://img.shields.io/github/v/release/frank-agent/frank?style=flat-square&color=111111&label=release" alt="Release">
-  <img src="https://img.shields.io/npm/v/@frank-agent/frank?style=flat-square&color=111111&label=npm" alt="npm">
+  <img src="https://img.shields.io/github/stars/HimanshuJ16/frank?style=flat-square&color=111111&label=stars" alt="Stars">
   <img src="https://img.shields.io/badge/works%20with-20%20agents-111111?style=flat-square" alt="Works with 20 agents">
   <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT license">
 </p>
@@ -120,7 +118,7 @@ work; the hooks just stay quiet.
 ### Claude Code
 
 ```
-/plugin marketplace add frank-agent/frank
+/plugin marketplace add HimanshuJ16/frank
 ```
 ```
 /plugin install frank@frank
@@ -131,7 +129,7 @@ Two separate prompts. The mode banner shows on the next session start.
 ### Codex
 
 ```bash
-codex plugin marketplace add frank-agent/frank
+codex plugin marketplace add HimanshuJ16/frank
 codex plugin add frank@frank
 ```
 
@@ -141,7 +139,7 @@ reads `FRANK:FULL`. Skills are invoked with `@`: `@frank ultra`, `@frank-review`
 ### GitHub Copilot CLI
 
 ```bash
-copilot plugin marketplace add frank-agent/frank
+copilot plugin marketplace add HimanshuJ16/frank
 copilot plugin install frank@frank
 ```
 
@@ -152,7 +150,7 @@ message from Copilot's transcript file, so it is best-effort there.
 ### OpenCode
 
 ```json
-{ "plugin": ["@frank-agent/frank"] }
+{ "plugin": ["@himanshuj16/frank"] }
 ```
 
 in `opencode.json`. Injects the rules every turn and adds the `/frank` commands. OpenCode
@@ -164,7 +162,7 @@ From a checkout: `{ "plugin": ["./.opencode/plugins/frank.mjs"] }`.
 ### Gemini CLI / Antigravity
 
 ```bash
-gemini extensions install https://github.com/frank-agent/frank
+gemini extensions install https://github.com/HimanshuJ16/frank
 ```
 
 Rules as always-on context, the `/frank` commands from `commands/`. Antigravity (`agy`)
@@ -179,8 +177,8 @@ replace `FRANK_DIR` with the checkout path.
 ### Devin CLI, Grok Build
 
 ```bash
-devin plugins install frank-agent/frank
-grok plugin install frank-agent/frank --trust
+devin plugins install HimanshuJ16/frank
+grok plugin install HimanshuJ16/frank --trust
 ```
 
 Skills only; neither host's hooks can inject instructions.
@@ -310,10 +308,10 @@ frank, *adj.* Open, honest and direct, without concealment.
 
 ## Star history
 
-<a href="https://www.star-history.com/frank-agent/frank#history">
+<a href="https://www.star-history.com/HimanshuJ16/frank#history">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=frank-agent/frank&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=frank-agent/frank&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=frank-agent/frank&type=Date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=HimanshuJ16/frank&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=HimanshuJ16/frank&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=HimanshuJ16/frank&type=Date" />
  </picture>
 </a>

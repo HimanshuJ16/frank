@@ -20,6 +20,11 @@ Nothing blocks the name: the plugin id is `frank`, the npm package is scoped, th
 lives under a new org. The domain is open and nothing depends on it. Alternates if the org
 name is contested: `deadpan` (npm free), `blunt`, `receipts`, `verdict`.
 
+**Update, same day.** The repo was pushed to `HimanshuJ16/frank`, not to a `frank-agent`
+org, so every manifest, badge and install command now points there, and the package is
+`@himanshuj16/frank`. The `frank-agent` scope was never created. Renaming later is a
+find-and-replace across the twelve files listed in the commit that made this change.
+
 ## ADR-001: Plain JS, zero dependencies for hooks
 
 **Accepted** (from the brief). Node 20 or newer, ESM, no build step. A hook runs on the
