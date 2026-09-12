@@ -11,11 +11,16 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const [dir, ...wanted] = process.argv.slice(2);
+const argv = process.argv.slice(2);
+const outIndex = argv.indexOf('--out');
+const outDir = outIndex >= 0 ? path.resolve(argv[outIndex + 1]) : path.join(root, 'examples');
+if (outIndex >= 0) argv.splice(outIndex, 2);
+const [dir, ...wanted] = argv;
 if (!dir) {
-  console.error('usage: make-examples.js <run dir> [scenario ids]');
+  console.error('usage: make-examples.js <run dir> [scenario ids] [--out dir]');
   process.exit(1);
 }
+fs.mkdirSync(outDir, { recursive: true });
 
 const summary = JSON.parse(fs.readFileSync(path.join(dir, 'summary.json'), 'utf8'));
 const scenarios = {};
@@ -88,7 +93,7 @@ for (const id of ids) {
     f.reply.trim(),
     '',
   ].join('\n');
-  const file = path.join(root, 'examples', `${id}.md`);
+  const file = path.join(outDir, `${id}.md`);
   fs.writeFileSync(file, out);
   written.push(`${id}.md`);
 }
