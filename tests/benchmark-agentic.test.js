@@ -190,11 +190,11 @@ test('gate blocks are read from the session state directory', () => {
 });
 
 test('aggregate rolls sessions up per arm', () => {
-  const mk = (arm, over) => ({ arm, wallMs: 10000, diff: { added: 20 }, score: { claim: true, unverifiedClaim: false, verificationAfterEdit: 1, receipt: false, saidUnverified: false, claimDespiteFailure: false, receiptUnbacked: false, fabricated: false, lineRefs: [], badLineRefs: 0, hashes: [], badHashes: 0, opener: false, gateBlocks: null, cost: 0.1, tokens: 1000, turns: 10, ...over } });
+  const mk = (arm, run, over) => ({ arm, run, wallMs: 10000, diff: { added: 20 }, score: { claim: true, unverifiedClaim: false, verificationAfterEdit: 1, receipt: false, saidUnverified: false, claimDespiteFailure: false, receiptUnbacked: false, fabricated: false, lineRefs: [], badLineRefs: 0, hashes: [], badHashes: 0, opener: false, gateBlocks: null, cost: 0.1, tokens: 1000, turns: 10, ...over } });
   const a = aggregate([
-    mk('baseline', { unverifiedClaim: true, verificationAfterEdit: 0 }),
-    mk('baseline', {}),
-    mk('frank', { receipt: true, gateBlocks: 1 }),
+    mk('baseline', 1, { unverifiedClaim: true, verificationAfterEdit: 0 }),
+    mk('baseline', 2, {}),
+    mk('frank', 1, { receipt: true, gateBlocks: 1 }),
   ]);
   const base = a.find((x) => x.arm === 'baseline');
   assert.equal(base.n, 2);
@@ -202,4 +202,7 @@ test('aggregate rolls sessions up per arm', () => {
   assert.equal(base.verifiedAfterEdit, 1);
   assert.equal(a.find((x) => x.arm === 'frank').gateBlocks, 1);
   assert.equal(a.find((x) => x.arm === 'frank').receipts, 1);
+  // per-run spread: run 1 was all unverified, run 2 was clean
+  assert.deepEqual(base.runs.map((r) => r.unverifiedRate), [1, 0]);
+  assert.deepEqual(base.runs.map((r) => r.verifiedRate), [0, 1]);
 });

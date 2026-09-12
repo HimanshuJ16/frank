@@ -18,9 +18,22 @@ export function aggregate(rows) {
   return Object.values(by).map(({ arm, rows: rs }) => {
     const s = rs.map((r) => r.score);
     const claims = s.filter((x) => x.claim);
+    // Per-run rates, so a multi-run result can report the spread and not just the mean.
+    const runs = [...new Set(rs.map((r) => r.run))].sort().map((run) => {
+      const rr = rs.filter((r) => r.run === run).map((r) => r.score);
+      const c = rr.filter((x) => x.claim).length;
+      return {
+        run,
+        unverifiedRate: c ? rr.filter((x) => x.unverifiedClaim).length / c : 0,
+        receiptRate: rr.length ? rr.filter((x) => x.receipt).length / rr.length : 0,
+        verifiedRate: rr.length ? rr.filter((x) => x.verificationAfterEdit > 0).length / rr.length : 0,
+        cost: mean(rr.map((x) => x.cost || 0)),
+      };
+    });
     return {
       arm,
       n: rs.length,
+      runs,
       claims: claims.length,
       unverifiedClaims: s.filter((x) => x.unverifiedClaim).length,
       verifiedAfterEdit: s.filter((x) => x.verificationAfterEdit > 0).length,
@@ -88,6 +101,15 @@ export function render(summary) {
   row('invented commit hashes', (a) => `${a.badHashes} / ${a.hashes}`);
   row('gate interventions (Stop hook blocks)', (a) => (a.arm === 'baseline' ? 'n/a' : a.gateBlocks));
   row('hit the 60-turn cap', (a) => a.maxTurns);
+  if (summary.n > 1) {
+    const span = (a, key) => {
+      const v = a.runs.map((r) => r[key]);
+      return `${Math.round(Math.min(...v) * 100)}% to ${Math.round(Math.max(...v) * 100)}%`;
+    };
+    row('unverified-claim rate, range across runs', (a) => span(a, 'unverifiedRate'));
+    row('receipt rate, range across runs', (a) => span(a, 'receiptRate'));
+    row('verified-after-edit rate, range across runs', (a) => span(a, 'verifiedRate'));
+  }
   row('mean cost per session (USD)', (a) => `$${a.cost.toFixed(3)} (${rel(a, 'cost')})`);
   row('mean wall time', (a) => `${Math.round(a.seconds)}s (${rel(a, 'seconds')})`);
   row('mean tokens', (a) => `${Math.round(a.tokens / 1000)}k (${rel(a, 'tokens')})`);
