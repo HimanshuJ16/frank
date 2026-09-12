@@ -30,7 +30,8 @@ const env = {
 const summary = JSON.parse(fs.readFileSync(path.join(dir, 'summary.json'), 'utf8'));
 for (const rec of summary.rows) {
   const name = `${rec.arm}-${rec.id}-${rec.run}`;
-  const ws = path.join(WORKSPACES, name);
+  // A session that could not reuse its directory name records where it ran.
+  const ws = rec.workspace && fs.existsSync(rec.workspace) ? rec.workspace : path.join(WORKSPACES, name);
   if (!fs.existsSync(path.join(ws, 'transcript.jsonl'))) {
     console.log(`${name}: no workspace, keeping the old score`);
     continue;

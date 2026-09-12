@@ -62,8 +62,15 @@ const sh = (cmd, cwd, env = {}) => spawnSync(cmd, { cwd, shell: true, encoding: 
 const psql = (sql) => spawnSync('docker', ['exec', DB_CONTAINER, 'psql', '-U', 'postgres', '-q', '-c', sql], { encoding: 'utf8' });
 
 function makeWorkspace(name) {
-  const ws = path.join(WORKSPACES, name);
-  fs.rmSync(ws, { recursive: true, force: true });
+  let ws = path.join(WORKSPACES, name);
+  try {
+    fs.rmSync(ws, { recursive: true, force: true });
+  } catch (err) {
+    // Windows keeps a directory locked while something has a cwd in it, and a
+    // killed session can leave one behind. A fresh name costs nothing.
+    if (err.code !== 'EBUSY' && err.code !== 'EPERM') throw err;
+    ws = path.join(WORKSPACES, `${name}-${Date.now().toString(36)}`);
+  }
   fs.cpSync(REPO, ws, {
     recursive: true,
     filter: (src) => !/[\\/](?:node_modules|\.venv|\.git|\.frank)(?:[\\/]|$)/.test(src),
@@ -194,6 +201,7 @@ const rows = await pool(jobs, async ({ arm, t, run }) => {
   let made = null;
   try {
     made = makeWorkspace(name);
+    rec.workspace = made.ws;
     const session = await runClaude(made.ws, t.ticket, arm);
     rec.exit = session.code;
     rec.wallMs = session.wallMs;
