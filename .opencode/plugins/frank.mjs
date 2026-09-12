@@ -6,7 +6,7 @@
 // plugin API that hands back the final assistant text, so the receipts gate
 // does not run here; the ruleset and the commands do.
 //
-//   { "plugin": ["@himanshuj16/frank"] }
+//   { "plugin": ["@himanshujangir/frank"] }
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

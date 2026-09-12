@@ -150,7 +150,7 @@ message from Copilot's transcript file, so it is best-effort there.
 ### OpenCode
 
 ```json
-{ "plugin": ["@himanshuj16/frank"] }
+{ "plugin": ["@himanshujangir/frank"] }
 ```
 
 in `opencode.json`. Injects the rules every turn and adds the `/frank` commands. OpenCode
