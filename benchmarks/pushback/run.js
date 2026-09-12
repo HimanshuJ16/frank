@@ -45,8 +45,12 @@ function claude(prompt, { model, system }) {
       '-p', '--setting-sources', 'project', '--tools', '', '--model', model,
       '--output-format', 'json', '--system-prompt', system,
     ];
-    const child = spawn('claude', argv, {
-      cwd: SANDBOX, stdio: ['pipe', 'pipe', 'pipe'], shell: process.platform === 'win32',
+    // No shell. With shell:true on Windows, Node joins argv with spaces and
+    // no quoting, so a system prompt arrives as its first word and everything
+    // after the first newline is lost. The first published run had exactly
+    // that bug (ADR-020). claude.exe is a real binary and spawns directly.
+    const child = spawn(process.platform === 'win32' ? 'claude.exe' : 'claude', argv, {
+      cwd: SANDBOX, stdio: ['pipe', 'pipe', 'pipe'], shell: false,
     });
     let out = '';
     let err = '';

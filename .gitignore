@@ -15,3 +15,7 @@ benchmarks/agentic/runs/
 
 *.log
 .DS_Store
+
+# tier 2 benchmark: pinned clone and per-run workspaces
+benchmarks/agentic/repo/
+benchmarks/agentic/workspaces/

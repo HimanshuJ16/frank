@@ -62,7 +62,18 @@ const NOT_EVIDENCE = [
   'sed -n 1,20p file.js',
   'rg "should work"',
   'npm run dev',
+  // "py b.py" inside a git command is not a Python run (caught by tier 2)
+  'git add backend/app/api/routes/items.py backend/app/models.py',
+  'git commit -m "add tests.py and conftest.py"',
+  'ls app/main.py tests/test_items.py',
+  'cat scripts/run.js lib/index.js',
 ];
+
+for (const cmd of ['python3 -u scripts/check.py', 'py app/x.py', 'node --enable-source-maps dist/server.js', 'cd backend && python -m pytest tests/api']) {
+  test(`evidence with flags: ${cmd}`, () => {
+    assert.equal(classifyCommand(cmd).isEvidence, true, `expected evidence: ${cmd}`);
+  });
+}
 
 for (const cmd of NOT_EVIDENCE) {
   test(`not evidence: ${cmd}`, () => {

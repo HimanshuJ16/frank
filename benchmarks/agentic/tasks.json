@@ -1,0 +1,74 @@
+[
+  {
+    "id": "date-picker",
+    "area": "frontend",
+    "ticket": "Add a due date field to the item creation form in the frontend so a user can pick a date when creating an item. Keep the existing fields working.",
+    "verify": "cd frontend && npx tsc -p tsconfig.build.json --noEmit"
+  },
+  {
+    "id": "color-picker",
+    "area": "frontend",
+    "ticket": "Let a user choose a label color for an item in the item creation form. Store it with the form values.",
+    "verify": "cd frontend && npx tsc -p tsconfig.build.json --noEmit"
+  },
+  {
+    "id": "file-dropzone",
+    "area": "frontend",
+    "ticket": "Add an attachment field to the item creation form where the user can drop or select a single file. The file does not need to be uploaded yet; just hold it in the form state and show its name.",
+    "verify": "cd frontend && npx tsc -p tsconfig.build.json --noEmit"
+  },
+  {
+    "id": "multi-step-wizard",
+    "area": "frontend",
+    "ticket": "Split the user sign-up form into two steps: account details first (email, password), then profile (full name), with a next and back button.",
+    "verify": "cd frontend && npx tsc -p tsconfig.build.json --noEmit"
+  },
+  {
+    "id": "star-rating",
+    "area": "frontend",
+    "ticket": "Add a 1 to 5 star rating control to the item creation form. The chosen rating should be part of the submitted form values.",
+    "verify": "cd frontend && npx tsc -p tsconfig.build.json --noEmit"
+  },
+  {
+    "id": "command-palette",
+    "area": "frontend",
+    "ticket": "Add a keyboard-triggered command palette (Ctrl+K or Cmd+K) that lets a logged-in user jump to Dashboard, Items and Settings.",
+    "verify": "cd frontend && npx tsc -p tsconfig.build.json --noEmit"
+  },
+  {
+    "id": "archive-item",
+    "area": "backend",
+    "ticket": "Add archive and unarchive endpoints for items in the backend API. An archived item should not appear in the default item list.",
+    "verify": "cd backend && uv run pytest -q"
+  },
+  {
+    "id": "search-items",
+    "area": "backend",
+    "ticket": "Add an optional search query parameter to the list items endpoint in the backend that filters items by title, case-insensitive.",
+    "verify": "cd backend && uv run pytest -q"
+  },
+  {
+    "id": "export-csv",
+    "area": "backend",
+    "ticket": "Add a backend endpoint that exports the current user's items as a CSV file download.",
+    "verify": "cd backend && uv run pytest -q"
+  },
+  {
+    "id": "bulk-delete",
+    "area": "backend",
+    "ticket": "Add a backend endpoint that deletes several items at once given a list of ids. A user may only delete their own items.",
+    "verify": "cd backend && uv run pytest -q"
+  },
+  {
+    "id": "duplicate-item",
+    "area": "backend",
+    "ticket": "Add a backend endpoint that duplicates an item: creates a copy of the given item owned by the current user and returns the copy.",
+    "verify": "cd backend && uv run pytest -q"
+  },
+  {
+    "id": "count-items",
+    "area": "backend",
+    "ticket": "Add a backend endpoint that returns how many items the current user owns.",
+    "verify": "cd backend && uv run pytest -q"
+  }
+]

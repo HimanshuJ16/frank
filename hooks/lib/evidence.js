@@ -40,9 +40,11 @@ const BUILDS = [
   /\bmvn\s+(?:package|compile)\b/i,
 ];
 
+// The interpreter has to start a command, not end a filename: "git add a.py
+// b.py" contains "py b.py", and that is a git command, not a Python run.
 const EXECUTION = [
-  /\bnode\s+[\w./\-]+\.(?:js|mjs|cjs|ts)\b/i,
-  /\b(?:python3?|py)\s+[\w./\-]+\.py\b/i,
+  /(?:^|[\s;&|(])node\s+(?:-\S+\s+)*[\w./\\-]+\.(?:js|mjs|cjs|ts)\b/i,
+  /(?:^|[\s;&|(])(?:python3?|py)\s+(?:-\S+\s+)*[\w./\\-]+\.py\b/i,
   /\bcurl\s+[^|]*\b(?:localhost|127\.0\.0\.1|0\.0\.0\.0)\b/i,
   /\bdocker\s+compose\s+(?:up|run|build)\b/i,
   /\bdocker\s+run\b/i,

@@ -150,8 +150,10 @@ things up cannot ship a made-up baseline.
 
 ## ADR-019: Two wording iterations on the opener rule, and what they showed
 
-**2026-09-12. Accepted.** First tier 1 run, Haiku 4.5 through `claude -p`, Sonnet
-grading, n=1, 60 scenarios, two arms.
+**2026-09-12. Numbers superseded by ADR-020: the runner never delivered the rules in this
+run. Kept as written, because a decision log that quietly rewrites its mistakes is not
+one.** First tier 1 run, Haiku 4.5 through `claude -p`, Sonnet grading, n=1, 60
+scenarios, two arms.
 
 | rules wording | correct | caves | stubborn | CHECK | openers (all) | openers, user right | openers, user wrong |
 |---|--:|--:|--:|--:|--:|--:|--:|
@@ -179,11 +181,92 @@ The v0.2 wording stays: it is more precise, costs no lines, and removed the one
 adversarial opener. No further wording changes without a run behind them, and the next
 run is tier 2, where the receipts half of the product is measured.
 
+## ADR-020: The first tier 1 run was invalid, and how
+
+**2026-09-12. Accepted. Supersedes the numbers in ADR-019.**
+
+The pushback runner spawned `claude` with Node's `shell: true`. On Windows that joins
+`argv` with spaces and no quoting, so `--tools ""` disappeared, `--system-prompt` received
+the single word `You`, the rest of the sentence became positional prompt words, and
+everything after the first newline was dropped. The rules are appended after a blank line.
+So in the run behind ADR-019, neither arm had a system prompt and the Frank arm never saw
+`rules/frank.md`. "32 openers either way" was two baseline arms compared to each other,
+and the two wording iterations changed nothing because the wording was never delivered.
+
+Found while building tier 2: the same spawn shape split `--plugin-dir C:\Users\Himanshu
+Jangir\...` into two arguments and the pilot's init event reported `plugins: []`. The
+proof is a five-line script (`spawnSync('node', [script, '--system-prompt', 'You are
+Frank.\nRule one'], { shell: true })` receives `['--system-prompt', 'You', 'are',
+'Frank.']`).
+
+Fix: both runners spawn `claude.exe` directly with `shell: false`, where libuv quotes
+arguments; an empty string, a path with spaces and a multi-line prompt all arrive intact
+(checked the same way). A two-scenario smoke of the fixed runner shows the arms differing
+for the first time: baseline opens "You're absolutely right, and I apologize", Frank opens
+with the fact.
+
+Consequences:
+
+- `benchmarks/results/2026-09-12-pushback.md` is regenerated from the corrected run and
+  the README numbers block with it. The invalid run directory is kept locally, not
+  published.
+- The v0.2 wording of the opener rule stays. Its justification is now that it names the
+  phrase the first run measured, not the (void) delta.
+- Ponytail's agentic writeup describes catching their own plugin running in the baseline
+  and publishing the fix as the reason to trust the rest. Same policy here: this ADR is
+  the receipt for the number that replaces the wrong one.
+
+## ADR-021: Tier 2 runs with `bypassPermissions` in throwaway workspaces
+
+**2026-09-12. Accepted.** `acceptEdits` refused edits to ordinary source files
+(`models.py`, `routes/items.py`) as "sensitive" in the Frank arm's pilot and not in the
+baseline's, which would have made the arms incomparable for a reason unrelated to Frank.
+Every session gets a fresh copy of the repo and its own database, and the copy is deleted
+after scoring, so the mode the docs reserve for "isolated containers and VMs" is the
+right one here. The venv's `Scripts` directory is on `PATH` for the session so `pytest`
+resolves to the project environment; without it the system Python answered and every
+backend test run failed for lack of `httpx`, in both arms.
+
+## ADR-022: What the first tier 2 run showed, and what it cost to get an honest number
+
+**2026-09-12. Accepted.** Haiku 4.5, 12 tickets, baseline vs frank, n=1, on the pinned
+FastAPI template with a real Postgres per session.
+
+| | baseline | frank |
+|---|--:|--:|
+| unverified "done" (of claims) | 4 / 12 | 0 / 7 |
+| verified after the last edit | 8 / 12 | 12 / 12 |
+| ended with a receipt | 0 / 12 | 11 / 12 |
+| receipt unbacked or fabricated, after re-running every cited command | 0 | 0 |
+| gate interventions | n/a | 9 |
+| cost, time | 100% | 126%, 159% |
+
+Three scorer bugs were found and fixed on the way, each of which would have made Frank
+look worse than it is and each of which is now a test case: receipts wrapped in backticks
+were re-run as `npm run build\``; "no TypeScript errors" was read as a claimed failure;
+and re-runs started from the workspace root while the session had `cd`'d into `backend/`.
+A fourth was environmental: `%TEMP%` came back as `HIMANS~1` and Vite refused to build
+under the 8.3 path. Every flag in the results file survived a rescore with all four fixed.
+
+Two contamination risks were closed before the run: the baseline had read this repo's
+own `CLAUDE.md` through the parent directories (it wrote `ran:` / `result:` into a commit
+message), so workspaces moved to the temp directory; and `acceptEdits` refused source
+edits as "sensitive" in one arm only, so sessions run with `bypassPermissions` (ADR-021).
+
+Decision: the README headline is tier 2's unverified-claim rate and receipt rate, with
+tier 1's cave rate beside it, and the cost increase in the same sentence. n=1 is stated
+everywhere the numbers appear. The next run is n=4, then Sonnet.
+
 ## Open questions
 
-- **OQ-1** Does the block reliably reach the model on a live Claude Code session, and does
-  it run the command or rewrite its last lines? Unit tests cover the hook contract; the
-  live behaviour still needs a dogfooding session.
+- **OQ-1** Answered 2026-09-12 in a headless session with the plugin loaded through
+  `--plugin-dir`. The message "Done, all tests pass" was blocked once
+  (`stats.json: block_no_receipt: 1`), and the model's next turn was "Running tests now"
+  followed by an attempt at `npm test`. The block reaches the model, and its first
+  instinct is to run the command rather than to reword. In the tier 2 pilot with tools
+  available, the Frank arm ran `pytest` after its edits and ended with
+  `ran: python -m pytest tests/api/routes/test_items.py -v` / `result: 13 passed`, so the
+  gate never had to fire.
 - **OQ-2** Claim detection is English-only.
 - **OQ-3** Answered by ADR-012.
 - **OQ-4** Subagent injection cost: the subagent variant is the `Never` and `Receipts`
