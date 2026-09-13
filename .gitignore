@@ -5,6 +5,8 @@
 
 node_modules/
 
+FRANK.md
+
 # benchmark scratch: raw generations and per-run workspaces stay local
 benchmarks/pushback/runs/
 benchmarks/agentic/runs/
