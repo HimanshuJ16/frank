@@ -41,35 +41,60 @@ class SoundEffects {
     }
   }
 
-  // Thermal paper ratchet/tick sound
+  // Rhythmic stepper motor print sound (series of mechanical ticks)
   public playReceiptPrint() {
     if (!this.enabled) return;
     try {
       this.initCtx();
       if (!this.ctx) return;
       
-      // Series of 3 quick micro-pulses
-      for (let i = 0; i < 4; i++) {
-        const time = this.ctx.currentTime + i * 0.06;
+      const tickCount = 9;
+      for (let i = 0; i < tickCount; i++) {
+        const time = this.ctx.currentTime + i * 0.08;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(1200 + (i % 2) * 200, time);
-        osc.frequency.exponentialRampToValueAtTime(400, time + 0.03);
+        osc.frequency.setValueAtTime(1400 + (i % 3) * 180, time);
+        osc.frequency.exponentialRampToValueAtTime(300, time + 0.025);
         
-        gain.gain.setValueAtTime(0.07, time);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
+        gain.gain.setValueAtTime(0.06, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.025);
         
         osc.connect(gain);
         gain.connect(this.ctx.destination);
         
         osc.start(time);
-        osc.stop(time + 0.03);
+        osc.stop(time + 0.025);
       }
     } catch {
       // Audio failure ignored
     }
+  }
+
+  // Mechanical stamp thud
+  public playStamp(success: boolean = true) {
+    if (!this.enabled) return;
+    try {
+      this.initCtx();
+      if (!this.ctx) return;
+      
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      
+      osc.type = success ? 'triangle' : 'sawtooth';
+      osc.frequency.setValueAtTime(success ? 220 : 130, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.09);
+      
+      gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.09);
+      
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.09);
+    } catch {}
   }
 
   // Success chime for verified receipts

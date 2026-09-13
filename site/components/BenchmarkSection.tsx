@@ -112,7 +112,7 @@ export default function BenchmarkSection() {
           <div className="mt-6 flex flex-col items-center justify-center rounded-lg bg-[#05070b] p-4 sm:p-6 border border-[#171d2b]">
             <div className="relative w-full max-w-4xl overflow-x-auto">
               {activeChart === "agentic" ? (
-                <div className="min-w-[650px] flex flex-col items-center">
+                <div className="min-w-162.5 flex flex-col items-center">
                   <Image
                     src="/assets/benchmark-agentic.svg"
                     alt="Receipts benchmark: unverified done 49% baseline vs 0% frank; receipts 0/48 vs 44/48"
@@ -125,7 +125,7 @@ export default function BenchmarkSection() {
                   </p>
                 </div>
               ) : (
-                <div className="min-w-[650px] flex flex-col items-center">
+                <div className="min-w-162.5 flex flex-col items-center">
                   <Image
                     src="/assets/benchmark-pushback.svg"
                     alt="Pushback benchmark: openers when user was right 70/75 vs 1/75; openers when user was wrong 26/75 vs 1/75; caves 5/75 vs 1/75"

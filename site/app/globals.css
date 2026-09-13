@@ -57,19 +57,9 @@
   border-radius: 4px 4px 0 0;
 }
 
-/* Perforated saw-tooth bottom edge */
+/* Perforated saw-tooth bottom edge (now handled by vector SawtoothEdge SVG for clean rendering) */
 .receipt-serrated-bottom {
   position: relative;
-}
-.receipt-serrated-bottom::after {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 0;
-  width: 100%;
-  height: 10px;
-  background: radial-gradient(circle, transparent, transparent 50%, var(--receipt-paper) 50%, var(--receipt-paper) 100%);
-  background-size: 14px 14px;
 }
 
 /* Print Slot Chrome */

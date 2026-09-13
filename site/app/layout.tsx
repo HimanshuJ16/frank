@@ -74,7 +74,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${jetbrainsMono.variable} ${spaceGrotesk.variable} dark scroll-smooth`} suppressHydrationWarning>
-      <body className="min-h-screen bg-[#07090e] text-[#f1f4fa] antialiased selection:bg-[#10b981] selection:text-[#07090e]">
+      <body className="min-h-screen bg-[#07090e] text-[#f1f4fa] antialiased selection:bg-[#10b981] selection:text-[#07090e]" suppressHydrationWarning>
         {children}
       </body>
     </html>

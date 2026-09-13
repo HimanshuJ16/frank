@@ -20,7 +20,7 @@ export default function Hero() {
   return (
     <header className="relative overflow-hidden border-b border-[#1f2738] bg-[#07090e] bg-grid-pattern pt-16 pb-20">
       {/* Ambient background glow */}
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-96 w-[700px] -translate-x-1/2 rounded-full bg-[#10b981]/10 blur-[120px]" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-96 w-175 -translate-x-1/2 rounded-full bg-[#10b981]/10 blur-[120px]" />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="flex flex-col items-center text-center">
