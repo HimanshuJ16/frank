@@ -17,7 +17,7 @@ Code 2.1.268.
 | Event | Matcher | Script | Why |
 |---|---|---|---|
 | `SessionStart` | `startup\|resume\|clear\|compact` | `inject.js` | Rules into context before the first prompt; mode banner. |
-| `UserPromptSubmit` | | `inject.js` | Re-inject every turn so the rules survive a long session; parse `/frank <mode>`. |
+| `UserPromptSubmit` | | `inject.js` | Re-inject every turn so the rules survive a long session; parse `/frank <mode>`. About 490 tokens per prompt; a cheaper cadence is proposed and unmeasured in ADR-028. |
 | `SubagentStart` | | `subagent.js` | Subagents start empty. They get the short ruleset. |
 | `PostToolUse` | `Bash\|PowerShell\|Edit\|Write\|MultiEdit\|NotebookEdit\|apply_patch` | `ledger.js` | Record edits and verification commands that succeeded. |
 | `PostToolUseFailure` | `Bash\|PowerShell` | `ledger.js` | Record verification commands that failed, with the exit code. |

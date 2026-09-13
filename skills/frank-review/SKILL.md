@@ -1,12 +1,9 @@
 ---
 name: frank-review
 description: >
-  Review a PR description, a pasted transcript, or the last few assistant
-  messages for four things only: agreement openers, claims of done/fixed/passes
-  with nothing run behind them, invented specifics (hashes, line numbers, URLs,
-  versions, test counts), and reversals that followed pushback rather than
-  evidence. Use when the user says "review this for honesty", "is this
-  overclaiming", "did it actually verify that", or invokes /frank-review.
+  Review a PR description, transcript or the last few replies for agreement
+  openers, unverified done/fixed/passes claims, invented specifics and caves.
+  Use on /frank-review, "review this for honesty" or "did it actually verify that".
 ---
 
 Target: `$ARGUMENTS`. A file path, a pasted transcript, a PR description, or,

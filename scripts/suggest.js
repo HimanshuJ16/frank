@@ -5,7 +5,9 @@ import { suggestCommand } from '../hooks/lib/evidence.js';
 import { readSession } from '../hooks/lib/state.js';
 
 const cwd = process.argv[2] || process.cwd();
-const sessionId = process.argv[3];
+// Claude Code exports the session id to tool commands as CLAUDE_CODE_SESSION_ID,
+// the same id the hooks file the ledger under, so the skill needs no argument.
+const sessionId = process.argv[3] || process.env.CLAUDE_CODE_SESSION_ID;
 
 const suggestion = suggestCommand(cwd);
 console.log(`repo: ${cwd}`);

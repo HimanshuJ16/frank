@@ -12,7 +12,9 @@ Run:
 node "${CLAUDE_PLUGIN_ROOT}/scripts/stats.js"
 ```
 
-Print the output as-is. Do not interpret it as a compliment or a complaint.
+Print the output as-is. Do not interpret it as a compliment or a complaint. On Claude
+Code the script reads the session id from the environment and adds a block for this
+session; on other hosts only the lifetime counters appear.
 
 To scan your own Claude Code transcripts instead of Frank's counters, that is a
 different command and it reads a lot of files:

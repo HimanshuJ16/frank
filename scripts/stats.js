@@ -30,7 +30,8 @@ if (rows.length === 0) {
   for (const [key, label] of rows) console.log(`  ${String(lifetime[key]).padStart(6)}  ${label}`);
 }
 
-const sessionId = process.argv[2];
+// Same id the hooks see; Claude Code exports it to tool commands.
+const sessionId = process.argv[2] || process.env.CLAUDE_CODE_SESSION_ID;
 if (sessionId) {
   const s = readSession(sessionId);
   const blocks = Object.values(s.blocks || {}).reduce((a, b) => a + (Number(b) || 0), 0);

@@ -32,6 +32,9 @@ const CLAIMS = [
   ['Compiles cleanly.', 'verification'],
   ['There are no errors.', 'verification'],
   ['Typecheck passes.', 'verification'],
+  ['It’s done.', 'completion'],
+  ['The endpoint is implemented and tested.', 'completion'],
+  ['Implemented the bulk delete endpoint in routes/items.py.', 'completion'],
 ];
 
 for (const [text, kind] of CLAIMS) {
@@ -69,6 +72,12 @@ const NOT_CLAIMS = [
   'No test suite exists, so nothing was verified.',
   'ran: npm test',
   'result: 42 passed, 0 failed',
+  // descriptions of where something happens, not claims of having done it
+  'Rate limiting is implemented upstream by the gateway.',
+  'The migration is done in two steps: add the column, then backfill.',
+  'This is done via the API, not the CLI.',
+  'Deletion is resolved at the database layer through ON DELETE CASCADE.',
+  'The parser is implemented in lib/parse.js; the bug is elsewhere.',
 ];
 
 for (const text of NOT_CLAIMS) {
@@ -115,6 +124,7 @@ const OPENERS = [
   'Good catch - I missed the nil check.',
   'Excellent point.',
   'I apologize for the confusion.',
+  'You’re absolutely right about the cap.',
 ];
 
 for (const text of OPENERS) {

@@ -86,7 +86,11 @@ function compileUserPatterns(patterns) {
 export function classifyCommand(command, userPatterns = []) {
   const extra = compileUserPatterns(userPatterns);
   for (const segment of splitCommands(command)) {
-    if (/^(?:#|echo|printf|true|false|cd\b)/i.test(segment)) continue;
+    if (/^(?:#|echo|printf|true|false|cd)\b/i.test(segment)) continue;
+    // A reading or git command proves nothing however many test runners it
+    // names: `grep -rn pytest src`, `cat pytest.ini`, a commit message with
+    // "make" in it. Skip the segment before any pattern sees it.
+    if (/^(?:git|gh|grep|rg|ag|cat|bat|ls|dir|find|head|tail|sed|awk|less|more|history|which|where|type|man|stat|wc|diff|tree|get-content|select-string|get-childitem)\b/i.test(segment)) continue;
     if (/--help\b|-h$|--version\b/.test(segment)) continue;
     for (const [category, patterns] of CATEGORIES) {
       for (const re of patterns) {

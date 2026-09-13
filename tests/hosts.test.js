@@ -51,6 +51,8 @@ test('Codex badge follows an @frank switch', () => {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'frank-host-'));
   const r = runHook('inject', { hook_event_name: 'UserPromptSubmit', prompt: '@frank ultra' }, { PLUGIN_DATA: '/tmp/codex', FRANK_HOME: home });
   assert.equal(r.json.systemMessage, 'FRANK:ULTRA');
+  const plain = runHook('inject', { hook_event_name: 'UserPromptSubmit', prompt: 'hi' }, { PLUGIN_DATA: '/tmp/codex', FRANK_HOME: home });
+  assert.match(plain.json.hookSpecificOutput.additionalContext, /You are Frank/, 'Codex keeps the full rules on every prompt');
   const off = runHook('inject', { hook_event_name: 'UserPromptSubmit', prompt: '@frank off' }, { PLUGIN_DATA: '/tmp/codex', FRANK_HOME: home });
   assert.equal(off.json.systemMessage, 'FRANK:OFF');
 });

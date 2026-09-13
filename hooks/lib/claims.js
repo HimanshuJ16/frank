@@ -6,6 +6,8 @@
 export function sanitize(text) {
   if (typeof text !== 'string') return '';
   return text
+    .replace(/[\u2018\u2019]/g, "'")     // curly apostrophes: you're
+    .replace(/[\u201C\u201D]/g, '"')
     .replace(/```[\s\S]*?(?:```|$)/g, ' ')      // fenced code
     .replace(/~~~[\s\S]*?(?:~~~|$)/g, ' ')
     .replace(/`[^`\n]*`/g, ' ')                  // inline code
@@ -57,6 +59,10 @@ function isQuestion(s) {
   return /\?\s*$/.test(s) || /^(?:do|does|did|is|are|was|were|should|can|could|will|would|have|has|shall)\b/i.test(s);
 }
 
+// "Rate limiting is implemented upstream by the gateway" describes code; it
+// does not claim to have finished anything. Passive voice plus a location.
+const DESCRIPTIVE = /\b(?:is|are|was|were|gets?|being)\s+(?:done|implemented|resolved|handled)\s+(?:in|by|at|through|via|upstream|inside|within|on|using|with|as|per)\b/i;
+
 /** Negation anywhere in the 45 characters before the match disarms it. */
 function negatedBefore(sentence, index) {
   const window = sentence.slice(Math.max(0, index - 45), index);
@@ -70,6 +76,7 @@ export function detectClaim(text) {
   for (const sentence of sentences(text)) {
     if (isQuestion(sentence) || isConditional(sentence)) continue;
     if (/^\s*(?:unverified|ran|result)\s*:/i.test(sentence)) continue; // receipt lines
+    if (DESCRIPTIVE.test(sentence)) continue;
     for (const [kind, patterns] of [['completion', COMPLETION], ['verification', VERIFICATION]]) {
       for (const re of patterns) {
         const m = re.exec(sentence);

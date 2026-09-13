@@ -412,6 +412,59 @@ records and leaves finished ones alone; re-invoking it with `--only` rewrote the
 with four rows, so the full invocation was repeated to rebuild it, and `report.js` now
 takes `--against` and `--note` for exactly this kind of one-arm comparison.
 
+## ADR-028: A review of the code users run: three detector fixes, two skill fixes, and a token-saving cadence that is not shipped
+
+**2026-09-13. Accepted, with one part deferred.** A pass over the hooks, scripts and
+skills with user experience, token use and cost in mind, before the first HN traffic.
+
+Shipped in 0.2.1:
+
+- **Reading commands never count as evidence.** `grep -rn pytest src`, `cat pytest.ini`
+  and a commit message containing "make" all wrote an exit-0 ledger entry, and a later
+  "done" passed on it. `classifyCommand` now skips a segment whose first word is a
+  reading or git tool before any pattern sees it. Nine must-not-match cases.
+- **Descriptions of code are not completion claims.** "Rate limiting is implemented
+  upstream by the gateway" and "the migration is done in two steps" drew a block in a
+  session with no commands. Passive voice plus a location is skipped
+  (`is|are|was|were ... implemented|done|resolved|handled ... in|by|at|via|upstream ...`).
+  "The endpoint is implemented and tested" still counts. Five must-not-match and two
+  must-match cases.
+- **Curly apostrophes.** "You are absolutely right" written with the curly apostrophe U+2019 was not an opener.
+  `sanitize` normalises curly quotes first.
+- **The receipt matcher reads the matched segment as well as the stored line** (the 500
+  character cut had produced a false positive on this repo's own check; see the test).
+- **`/frank-verify` and `/frank-stats` said they read this session's ledger and did
+  not**, because the scripts had no session id. Claude Code exports the hook's session id
+  to tool commands as `CLAUDE_CODE_SESSION_ID`; `suggest.js` and `stats.js` read it
+  when no argument is given, and the skill text says which hosts get the session block.
+- The `frank-review` skill description, which every session carries in context, is a
+  third of its former length. Skill descriptions total about 300 tokens per session;
+  bodies load only on invocation.
+
+Measured and not changed: each hook is a Node process that starts, reads stdin and exits
+in 80 to 100 ms; the subagent excerpt is about 285 tokens.
+
+**Deferred: a reminder instead of the full rules on every prompt.** The rules with their
+framing are about 490 tokens and go into context on every `UserPromptSubmit`, so a
+fifty-prompt session carries roughly 24k tokens of the same text and reaches compaction
+sooner. The proposal: full rules at `SessionStart` (which fires again after compaction,
+ADR-010), on a mode switch and every tenth prompt; a four-line, 75-token reminder
+otherwise, on Claude Code only. It was implemented and passed its unit tests, and the
+headless logs confirm `SessionStart` fires in `claude -p`, so tier 2 can measure it.
+Two attempts to measure it died the same way: Postgres timed out under memory pressure
+at concurrency 3 and again at 2, with 3 GB of RAM free on the machine, the failure
+ADR-022 recorded once before. Rather than ship a change to what the model sees on every
+turn without a receipt, it is reverted. The exact run that would settle it, from a
+machine with Docker and about 8 GB free:
+
+```
+node benchmarks/agentic/run.js --model haiku --n 4 --arms frank --concurrency 1 --out <date>-haiku-reminder
+node benchmarks/agentic/report.js benchmarks/agentic/runs/<date>-haiku-reminder --against benchmarks/agentic/runs/2026-09-12-haiku
+```
+
+If receipts and unverified claims hold at 44 / 48 and 0, the cadence ships and the
+README's cost paragraph changes with it.
+
 ## Open questions
 
 - **OQ-1** Answered 2026-09-12 in a headless session with the plugin loaded through

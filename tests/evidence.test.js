@@ -67,6 +67,16 @@ const NOT_EVIDENCE = [
   'git commit -m "add tests.py and conftest.py"',
   'ls app/main.py tests/test_items.py',
   'cat scripts/run.js lib/index.js',
+  // a reading or git command never counts, whatever it mentions
+  'git commit -m "make the tests pass"',
+  'grep -rn pytest src',
+  'git log --grep tsc',
+  'rg "npm test" docs',
+  'cat pytest.ini',
+  'ls tests/ && cat pytest.ini',
+  'history | grep make',
+  'Get-Content pytest.ini',
+  'git diff -- tests/test_items.py',
 ];
 
 for (const cmd of ['python3 -u scripts/check.py', 'py app/x.py', 'node --enable-source-maps dist/server.js', 'cd backend && python -m pytest tests/api']) {

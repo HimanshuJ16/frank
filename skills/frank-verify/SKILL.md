@@ -14,10 +14,11 @@ Produce a real receipt for the most recent change. Four steps, in order.
 node "${CLAUDE_PLUGIN_ROOT}/scripts/suggest.js" .
 ```
 
-It prints the command this repo's own config implies, and what the session ledger
-has already recorded since the last edit. If it prints `none detected`, look for a
-test script, a CI workflow, or a Makefile target yourself. If there is still
-nothing, skip to step 4.
+It prints the command this repo's own config implies and, on Claude Code, what this
+session's ledger has recorded since the last edit. If something already ran after the
+last edit, that is the receipt: quote it and skip to step 4. If it prints
+`none detected`, look for a test script, a CI workflow, or a Makefile target yourself.
+If there is still nothing, skip to step 4.
 
 **2. Narrow it.** Prefer the smallest command that actually covers the change:
 the single test file over the whole suite, the typecheck over the full build.

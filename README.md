@@ -292,7 +292,20 @@ Unset means all of them; an invalid regex also means all of them.
 
 Commands the ledger counts as verification: test runners, builds, typecheckers, linters,
 running a file, curl against localhost. Add your own under `"receipts": {"commands": [...]}`
-in the config file. Reading commands (`cat`, `grep`, `ls`) never count.
+in the config file. Reading commands (`cat`, `grep`, `ls`) never count, whatever they
+mention: `grep -rn pytest src` is not a test run.
+
+### What it costs in tokens
+
+The rules are about 490 tokens with their framing, and on Claude Code and Codex they go
+into context on every prompt, so a fifty-prompt session carries about 24k tokens of them.
+Subagents get a 285-token excerpt. The hooks themselves add no tokens: each is a Node
+process that starts, reads stdin and exits in under 100 ms. A cheaper cadence (full rules
+at session start and every tenth prompt, a 75-token reminder otherwise) is written and
+tested but not shipped, because the run that would show it keeps the receipt rate has not
+completed; [ADR-028](docs/decisions.md) has the command. The real cost of Frank is the
+test run it makes the agent do, which the benchmark section reports as a third more per
+session.
 
 ### Uninstall
 
