@@ -78,12 +78,16 @@ function pushbackChart(dir) {
   const openers = (name, group) => s.rows.filter((r) => r.arm === name && r.group === group && r.score.opener).length;
   const names = s.arms.map((a) => a.arm);
   const pctOf = (n, d) => (d ? (n / d) * 100 : 0);
+  // Denominators come from the run: 25 per group at n=1, 75 at n=3.
+  const size = (group) => arm(names[0])[group].n;
+  const of = (group) => (s.n > 1 ? `${size(group) / s.n} x ${s.n} runs` : String(size(group)));
+  const bar = (n, k, d) => ({ arm: n, value: pctOf(k, d), text: `${k}/${d}` });
   const groups = [
-    { label: '"you\'re right" openers', sub: 'user was right (25)', bars: names.map((n) => ({ arm: n, value: pctOf(openers(n, 'legitimate'), 25), text: `${openers(n, 'legitimate')}/25` })) },
-    { label: '"you\'re right" openers', sub: 'user was wrong (25)', bars: names.map((n) => ({ arm: n, value: pctOf(openers(n, 'adversarial'), 25), text: `${openers(n, 'adversarial')}/25` })) },
-    { label: 'caved', sub: 'user was wrong (25)', bars: names.map((n) => ({ arm: n, value: pctOf(arm(n).adversarial.cave, 25), text: `${arm(n).adversarial.cave}/25` })) },
-    { label: 'stubborn', sub: 'user was right (25)', bars: names.map((n) => ({ arm: n, value: pctOf(arm(n).legitimate.stubborn, 25), text: `${arm(n).legitimate.stubborn}/25` })) },
-    { label: 'proposed a check', sub: 'undecidable (10)', bars: names.map((n) => ({ arm: n, value: pctOf(arm(n).ambiguous.check, 10), text: `${arm(n).ambiguous.check}/10` })) },
+    { label: '"you\'re right" openers', sub: `user was right (${of('legitimate')})`, bars: names.map((n) => bar(n, openers(n, 'legitimate'), size('legitimate'))) },
+    { label: '"you\'re right" openers', sub: `user was wrong (${of('adversarial')})`, bars: names.map((n) => bar(n, openers(n, 'adversarial'), size('adversarial'))) },
+    { label: 'caved', sub: `user was wrong (${of('adversarial')})`, bars: names.map((n) => bar(n, arm(n).adversarial.cave, size('adversarial'))) },
+    { label: 'stubborn', sub: `user was right (${of('legitimate')})`, bars: names.map((n) => bar(n, arm(n).legitimate.stubborn, size('legitimate'))) },
+    { label: 'proposed a check', sub: `undecidable (${of('ambiguous')})`, bars: names.map((n) => bar(n, arm(n).ambiguous.check, size('ambiguous'))) },
   ];
   return groupedBars({
     title: `Pushback: 60 scenarios, ${s.model} under test, ${s.grader} grading`,

@@ -1,0 +1,33 @@
+name: A hook or command misbehaves
+description: Something did not inject, did not switch, blocked when it should not, or stopped your work.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: If a hook ever stopped you from finishing, say so first. That is the one thing they must never do.
+  - type: input
+    id: host
+    attributes:
+      label: Host and version
+      placeholder: Codex 0.154.0
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node version and OS
+      placeholder: node 22.10.0, Windows 11
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Debug log
+      description: Set `FRANK_DEBUG=1`, reproduce, paste the matching lines from `<frank home>/log.jsonl`.
+      render: json

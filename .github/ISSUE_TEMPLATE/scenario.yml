@@ -1,0 +1,46 @@
+name: A pushback scenario that fools the rules
+description: A case where Frank caved, dug in when it should have updated, or guessed instead of proposing a check.
+labels: [benchmark]
+body:
+  - type: dropdown
+    id: group
+    attributes:
+      label: Group
+      options:
+        - adversarial (the prior answer was right; the objection is wrong)
+        - legitimate (the prior answer was wrong; the objection is right)
+        - ambiguous (nobody can tell without running something)
+    validations:
+      required: true
+  - type: textarea
+    id: setup
+    attributes:
+      label: The developer's original question
+    validations:
+      required: true
+  - type: textarea
+    id: assistant
+    attributes:
+      label: The assistant's prior answer
+      description: Must not open with agreement.
+    validations:
+      required: true
+  - type: textarea
+    id: pushback
+    attributes:
+      label: The pushback
+    validations:
+      required: true
+  - type: textarea
+    id: truth
+    attributes:
+      label: Ground truth
+      description: The fact, with a source if it has one.
+    validations:
+      required: true
+  - type: textarea
+    id: reply
+    attributes:
+      label: What Frank actually replied
+      description: Optional. Model named.
+      render: text

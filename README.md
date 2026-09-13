@@ -17,8 +17,8 @@
 
 <!-- numbers:start -->
 <p align="center">
-  <strong>Unverified "done": 49% to 0% &middot; Receipts: 0 to 44 of 48 &middot; Caves under pushback: 12% to 0% &middot; "You're right" openers: 39 to 0 of 60</strong><br>
-  <sub>Measured on 96 real headless Claude Code sessions (Haiku 4.5, n=4) editing a real open-source repo, the same FastAPI + React template and the same twelve tickets ponytail used, against the same agent with no plugin; and on 60 hand-written pushback scenarios graded by Sonnet. Every one of the 44 Frank receipts was re-run afterwards and every one was true. The cost: Frank sessions take about a third more money and half again as much time, because they run the tests instead of saying they did. Range across runs: baseline unverified 33% to 67%, Frank 0% in every run. <a href="benchmarks/results/2026-09-12-agentic.md">Receipts writeup</a> &middot; <a href="benchmarks/results/2026-09-12-pushback.md">Pushback writeup</a> &middot; <a href="benchmarks/">reproduce it</a>.</sub>
+  <strong>Unverified "done": 49% to 0% &middot; Receipts: 0 to 44 of 48 &middot; Caves under pushback: 5 to 1 of 75 &middot; "You're right" openers: 119 to 3 of 180</strong><br>
+  <sub>Measured on 96 real headless Claude Code sessions (Haiku 4.5, n=4) editing a real open-source repo, the same FastAPI + React template and the same twelve tickets ponytail used, against the same agent with no plugin; and on 60 hand-written pushback scenarios, three runs each, graded by Sonnet. Every one of the 44 Frank receipts was re-run afterwards and every one was true. The cost: Frank sessions take about a third more money and half again as much time, because they run the tests instead of saying they did. Range across runs: baseline unverified 33% to 67%, Frank 0% in every run. <a href="benchmarks/results/2026-09-12-agentic.md">Receipts writeup</a> &middot; <a href="benchmarks/results/2026-09-13-pushback.md">Pushback writeup</a> &middot; <a href="benchmarks/">reproduce it</a>.</sub>
 </p>
 <!-- numbers:end -->
 
@@ -61,9 +61,10 @@ With Frank:
 > What language is this code in, and where did you test `'' == 0`?
 
 The first one apologised for being right and went looking for a bug that does not exist.
-Three of twenty-five wrong objections got that treatment from the baseline; none from
-Frank. Every pair, including the ones where the two arms agree, is in
-[examples/](examples/).
+Across three runs of the twenty-five wrong objections, the baseline did that five times
+in seventy-five; Frank was scored as caving once, on a reply that kept its answer and got
+the mechanism half wrong. Every pair from the first run, including the ones where the two
+arms agree, is in [examples/](examples/).
 
 Then the receipts half. A real Claude Code session, the ticket "add a bulk-delete
 endpoint for items", same model, the last lines of each session's final message:
@@ -121,26 +122,30 @@ table, limitations and the exact commands:
 
 The pushback half is measured separately: 60 hand-written scenarios where the developer
 pushes back on an answer, 25 times wrongly, 25 times rightly, 10 times on something
-nobody can know without running a check. Graded by Sonnet against a written ground truth.
+nobody can know without running a check. Three runs of each, 360 graded replies, graded by
+Sonnet against a written ground truth.
 
 <p align="center">
-  <img src="assets/benchmark-pushback.svg" width="860" alt="Pushback benchmark: openers when the user was right 23/25 vs 0/25; openers when the user was wrong 7/25 vs 0/25; caves 3/25 vs 0/25; stubborn 0 vs 0; proposed a check 5/10 vs 6/10">
+  <img src="assets/benchmark-pushback.svg" width="860" alt="Pushback benchmark, 3 runs: openers when the user was right 70/75 vs 1/75; openers when the user was wrong 26/75 vs 1/75; caves 5/75 vs 1/75; stubborn 0 vs 0; proposed a check 10/30 vs 23/30">
 </p>
 
-| 60 scenarios | baseline | frank |
+| 60 scenarios, 3 runs each | baseline | frank |
 |---|--:|--:|
-| caved: abandoned a correct answer under a wrong objection | **3 / 25** | **0 / 25** |
-| stubborn: kept a wrong answer under a right objection | 0 / 25 | 0 / 25 |
-| opened with "you're right" when the user was wrong | 7 / 25 | 0 / 25 |
-| opened with "you're right" when the user was right | 23 / 25 | 0 / 25 |
-| proposed a check instead of guessing | 5 / 10 | 6 / 10 |
+| caved: abandoned a correct answer under a wrong objection | **5 / 75** | **1 / 75** |
+| same, per run | 2, 2, 1 | 0, 1, 0 |
+| stubborn: kept a wrong answer under a right objection | 0 / 75 | 0 / 75 |
+| opened with "you're right" when the user was wrong | 26 / 75 | 1 / 75 |
+| opened with "you're right" when the user was right | 70 / 75 | 1 / 75 |
+| proposed a check instead of guessing | 10 / 30 | 23 / 30 |
 
 Read the first two rows together. A rule that cut caving by making the model dig in would
-show up as a higher stubborn rate; it did not. Writeup:
-[benchmarks/results/2026-09-12-pushback.md](benchmarks/results/2026-09-12-pushback.md).
+show up as a higher stubborn rate; it did not. Frank's one counted cave kept its answer
+and misdescribed the mechanism; the grader marked the position wrong and the scorer calls
+that a cave, so it stays in the number. Writeup, with every reply in the run directory:
+[benchmarks/results/2026-09-13-pushback.md](benchmarks/results/2026-09-13-pushback.md).
 
 **Read these numbers with the limits attached.** One model; four runs per ticket for the
-receipts tier and one per scenario for pushback; scenarios written by the same people who
+receipts tier and three per scenario for pushback; scenarios written by the same people who
 wrote the rules; a first pushback run that was thrown out because the runner lost the
 system prompt on Windows ([ADR-020](docs/decisions.md)); and a scorer that was wrong
 about Frank's receipts six ways before it was right, each way now a test case
@@ -301,8 +306,9 @@ in the config file. Reading commands (`cat`, `grep`, `ls`) never count.
 | Cursor / Windsurf / Cline / Kiro / etc. | Delete the copied rules file |
 
 Those remove the plugin. Frank also keeps a mode flag, counters and a per-session list of
-the commands you ran under `~/.config/frank/` (`%APPDATA%\frank` on Windows). No message
-content, nothing leaves the machine, session files are pruned after seven days.
+the verification commands you ran, with their exit codes and not their output, under
+`~/.config/frank/` (`%APPDATA%\frank` on Windows). No message content, no command output,
+nothing leaves the machine, session files are pruned after seven days.
 `node scripts/uninstall.js` lists it and `--yes` deletes it. Run it before the host
 command above; the script is a plugin file and goes with the plugin.
 
@@ -358,11 +364,11 @@ The hooks are tested by piping the documented stdin JSON into the real scripts, 
 and Windows, Node 20 and 22. Detectors are table-driven; the must-not-match cases matter
 more than the matches, because a false positive costs the user a blocked turn.
 
-Latest run of the suite (Node 22.10.0, Windows 11, 2026-09-12):
+Latest run of the suite (Node 22.10.0, Windows 11, 2026-09-13):
 
 ```
 ran: node scripts/check-rule-copies.js && node scripts/check-versions.js && node --test
-result: 13 adapters match rules/frank.md; 7 version files at 0.1.0; 272 passed, 0 failed
+result: 13 adapters match rules/frank.md; 7 version files at 0.2.0; 278 passed, 0 failed
 ```
 
 The benchmark: [benchmarks/](benchmarks/). It runs on a Claude Code login, no API key.

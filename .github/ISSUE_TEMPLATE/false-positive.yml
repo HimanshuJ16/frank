@@ -1,0 +1,41 @@
+name: The gate blocked an honest message
+description: Frank asked for a receipt when the message did not claim anything, or the receipt was real.
+labels: [false-positive]
+body:
+  - type: markdown
+    attributes:
+      value: A false positive costs you a turn, so it outranks a miss. Paste, do not paraphrase.
+  - type: input
+    id: host
+    attributes:
+      label: Host and mode
+      placeholder: Claude Code 2.1.x, full
+    validations:
+      required: true
+  - type: textarea
+    id: message
+    attributes:
+      label: The last lines of the message that was blocked
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: What Frank said
+      description: The text after "Frank:".
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: ran
+    attributes:
+      label: What had run after the last edit
+      description: The commands, if any. `node scripts/suggest.js . <session id>` prints the ledger.
+      render: text
+  - type: textarea
+    id: log
+    attributes:
+      label: Debug log
+      description: Optional. Lines from `<frank home>/log.jsonl` with `FRANK_DEBUG=1` set.
+      render: json

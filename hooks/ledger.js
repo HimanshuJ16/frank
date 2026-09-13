@@ -2,7 +2,8 @@
 // PostToolUse and PostToolUseFailure: write down what actually ran.
 //
 // Two facts go in the ledger. When a file was last edited, and every shell
-// command since that looked like verification, with its exit code. The gate
+// command since that looked like verification, with its exit code and nothing
+// else: no output, so a token a test printed never lands on disk. The gate
 // reads it at Stop time. The ledger records commands; it never runs them.
 import { run } from './lib/io.js';
 import { getMode, getConfig, updateSession } from './lib/state.js';
@@ -31,13 +32,6 @@ function exitCodeOf(input) {
   return 0;
 }
 
-function tailOf(input, limit = 400) {
-  const r = input.tool_response;
-  const text = input.hook_event_name === 'PostToolUseFailure'
-    ? String(input.error || '')
-    : typeof r === 'string' ? r : String(r?.stdout ?? r?.output ?? r?.stderr ?? '');
-  return text.trim().slice(-limit);
-}
 
 run('ledger', (input) => {
   if (getMode() === 'off') return null;
@@ -62,7 +56,6 @@ run('ledger', (input) => {
       matched: hit.matched,
       category: hit.category,
       exitCode: exitCodeOf(input),
-      tail: tailOf(input),
     }],
   }));
   return null;

@@ -136,6 +136,9 @@ Differences that matter:
 - The VS Code flavour of Copilot sets no `COPILOT_PLUGIN_DATA`; it only sets
   `CLAUDE_PLUGIN_ROOT` pointing under `.vscode/agent-plugins`. `host.js` checks for that
   path shape.
+- `hooks/copilot-hooks.json` references the plugin directory as `${PLUGIN_ROOT}`. That
+  name is not in the hooks reference page and has not been verified against a live
+  Copilot CLI install; the README labels the Copilot gate best-effort for this reason too.
 
 ## OpenCode
 

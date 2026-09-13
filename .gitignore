@@ -7,15 +7,21 @@ node_modules/
 
 FRANK.md
 
-# benchmark scratch: raw generations and per-run workspaces stay local
-benchmarks/pushback/runs/
-benchmarks/agentic/runs/
+# benchmark scratch: raw generations stay local, except the runs a results
+# file quotes. Those are committed so every number can be re-read, not just
+# re-run. Add a run here when its results file lands.
+benchmarks/pushback/runs/*
+!benchmarks/pushback/runs/2026-09-12-haiku-v3/
+!benchmarks/pushback/runs/2026-09-13-haiku-n3/
+benchmarks/agentic/runs/*
+!benchmarks/agentic/runs/2026-09-12-haiku/
 .promptfoo/
 
 # local Claude Code permission grants
 .claude/settings.local.json
 
 *.log
+*.log.err
 .DS_Store
 
 # tier 2 benchmark: pinned clone and per-run workspaces
