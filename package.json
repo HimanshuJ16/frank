@@ -51,7 +51,9 @@
     "bench:pushback": "node benchmarks/pushback/run.js",
     "stats": "node scripts/stats.js",
     "count": "node scripts/count.js",
-    "uninstall": "node scripts/uninstall.js"
+    "uninstall": "node scripts/uninstall.js",
+    "site": "npm --prefix site run dev",
+    "site:build": "npm --prefix site run build"
   },
   "publishConfig": {
     "access": "public"

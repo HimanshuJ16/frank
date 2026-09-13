@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-void: #07090e;
+    --bg-surface: #0e121a;
+    --bg-card: #131824;
+    --bg-card-hover: #182030;
+    --border-subtle: #1f2738;
+    --border-bright: #2d3850;
+    
+    --text-main: #f1f4fa;
+    --text-muted: #8c96ab;
+    --text-faint: #4b556b;
+    
+    --emerald-verdict: #10b981;
+    --emerald-glow: rgba(16, 185, 129, 0.15);
+    --amber-warning: #f59e0b;
+    --amber-glow: rgba(245, 158, 11, 0.15);
+    --crimson-cave: #f43f5e;
+    --crimson-glow: rgba(244, 63, 94, 0.15);
+    --blue-accent: #38bdf8;
+    
+    --receipt-paper: #faf8f2;
+    --receipt-paper-dark: #f0ece0;
+    --receipt-ink: #111827;
+    --receipt-muted: #4b5563;
+    --receipt-border: #e2ded4;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--bg-void);
+    color: var(--text-main);
+    font-family: var(--font-mono, "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+    overflow-x: hidden;
+    selection-background-color: #10b981;
+    selection-color: #07090e;
+  }
+
+  ::selection {
+    background: #10b981;
+    color: #07090e;
+  }
+}
+
+/* Receipt Paper Styles & Serrated Edge */
+.receipt-paper {
+  background-color: var(--receipt-paper);
+  color: var(--receipt-ink);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  border-radius: 4px 4px 0 0;
+}
+
+/* Perforated saw-tooth bottom edge */
+.receipt-serrated-bottom {
+  position: relative;
+}
+.receipt-serrated-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: radial-gradient(circle, transparent, transparent 50%, var(--receipt-paper) 50%, var(--receipt-paper) 100%);
+  background-size: 14px 14px;
+}
+
+/* Print Slot Chrome */
+.printer-slot {
+  background: linear-gradient(180deg, #050608 0%, #161a22 100%);
+  border: 1px solid #232a3b;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.8), 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* Subtle Grid Background */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Glow & Blur accents */
+.emerald-glow-sm {
+  box-shadow: 0 0 20px -5px rgba(16, 185, 129, 0.35);
+}
+
+.amber-glow-sm {
+  box-shadow: 0 0 20px -5px rgba(245, 158, 11, 0.35);
+}
+
+.crimson-glow-sm {
+  box-shadow: 0 0 20px -5px rgba(244, 63, 94, 0.35);
+}
+
+/* Blinking Cursor */
+@keyframes cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.animate-cursor {
+  animation: cursor-blink 1s infinite;
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2.5s infinite;
+}
+
+/* Subtle print roll animation */
+@keyframes receiptFeed {
+  0% {
+    transform: translateY(-80px) scale(0.96);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(4px) scale(1.01);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-receipt-feed {
+  animation: receiptFeed 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Code and mono typography helpers */
+.font-mono-code {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+}
+
+.font-display {
+  font-family: var(--font-display, system-ui, -apple-system, sans-serif);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #090c12;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2638;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2d3852;
+}
