@@ -22,7 +22,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://frank.himanshujangir.com"),
-  title: "Frank — Honest senior dev mode for AI agents",
+  title: "Frank - Honest senior dev mode for AI agents",
   description: "He answers first. He shows the receipt. He does not tell you you're right. Verdict first, receipts attached. Works with 20+ AI agents.",
   keywords: [
     "Frank",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://frank.himanshujangir.com",
-    title: "Frank — Honest senior dev mode for AI agents",
+    title: "Frank - Honest senior dev mode for AI agents",
     description: "He answers first. He shows the receipt. He does not tell you you're right. Verdict first, receipts attached.",
     siteName: "Frank",
     images: [
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Frank — Honest senior dev mode for AI agents",
+    title: "Frank - Honest senior dev mode for AI agents",
     description: "He answers first. He shows the receipt. He does not tell you you're right.",
     images: ["/assets/logo.svg"],
   },
