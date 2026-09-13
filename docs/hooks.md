@@ -1,8 +1,8 @@
 # Hook behavior, as verified
 
-Re-read the relevant section before changing a hook. The APIs move, and section 8 of
-`FRANK.md` was written from an earlier shape of them. Each host below records the
-source and the date it was checked.
+Re-read the relevant section before changing a hook. The APIs move, and the hook design
+this package started from was written against an earlier shape of them. Each host below
+records the source and the date it was checked.
 
 ## Claude Code
 

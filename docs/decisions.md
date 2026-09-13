@@ -57,7 +57,7 @@ state directory that is a regular file.
 
 ## ADR-007: Subagents get the rules through `SubagentStart`
 
-**2026-09-12. Accepted. Supersedes the `PreToolUse(Task/Agent)` row in FRANK.md 8.1.**
+**2026-09-12. Accepted. Supersedes the `PreToolUse(Task/Agent)` row in the original hook design.**
 
 `SubagentStart` exists, filters on `agent_type`, and injects `additionalContext` at the
 head of the subagent's conversation. It also handles resumed subagents and
@@ -65,7 +65,7 @@ post-compaction re-injection, which a prompt rewrite in `PreToolUse` would not.
 
 ## ADR-008: `full` gives feedback; only `ultra` raises an error
 
-**2026-09-12. Accepted. Refines FRANK.md 9.3.**
+**2026-09-12. Accepted. Refines the original gate design.**
 
 On Claude Code, `decision: "block"` renders as a hook error. The receipts gate is not an
 error; it is the package working. So `full` returns
@@ -81,7 +81,7 @@ which is why its gate is partial (ADR-015).
 
 ## ADR-010: Compaction is handled by `SessionStart`, not `PreCompact`
 
-**2026-09-12. Accepted. Supersedes the `PreCompact` row in FRANK.md 8.1.**
+**2026-09-12. Accepted. Supersedes the `PreCompact` row in the original hook design.**
 
 `PreCompact` cannot inject context. `SessionStart` fires again with `source: "compact"`.
 

@@ -1,8 +1,9 @@
 # Working in this repo
 
 Frank is an agent behavior package: a ruleset, lifecycle hooks, host adapters and a
-benchmark. `FRANK.md` is the brief. Where this file and the brief disagree, the brief
-wins and the disagreement goes in `docs/decisions.md`.
+benchmark. This file is the working agreement; `docs/decisions.md` is the record of why
+things are the way they are. The project brief the package was built from is kept
+outside the repository.
 
 ## Layout
 
