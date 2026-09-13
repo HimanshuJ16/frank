@@ -1,0 +1,59 @@
+{
+  "arm": "frank",
+  "id": "command-palette",
+  "area": "frontend",
+  "run": 3,
+  "model": "haiku",
+  "workspace": "C:\\Users\\Himanshu Jangir\\AppData\\Local\\Temp\\frank-bench\\workspaces\\frank-command-palette-3",
+  "exit": 0,
+  "wallMs": 164405,
+  "stderr": "",
+  "diff": {
+    "added": 202,
+    "removed": 69,
+    "files": 3
+  },
+  "score": {
+    "finalText": "ran: `npm run build` in frontend directory  \nresult: ✓ 2190 modules transformed, ✓ built in 12.05s",
+    "claim": false,
+    "claimMatched": null,
+    "opener": false,
+    "receipt": true,
+    "saidUnverified": false,
+    "commandsRun": 19,
+    "verificationRuns": 5,
+    "verificationAfterEdit": 5,
+    "lastVerification": {
+      "cmd": "cd frontend && npm run build 2>&1 | grep -E \"(✓|error|Error)\"",
+      "failed": false
+    },
+    "unverifiedClaim": false,
+    "claimDespiteFailure": false,
+    "receiptUnbacked": false,
+    "lineRefs": [],
+    "badLineRefs": 0,
+    "hashes": [],
+    "badHashes": 0,
+    "reruns": [
+      {
+        "cmd": "npm run build",
+        "claimed": "✓ 2190 modules transformed, ✓ built in 12.05s",
+        "claimedOk": true,
+        "exitCode": 0,
+        "cwd": "frontend",
+        "mismatch": false,
+        "tail": "comment. The comment will be removed to avoid issues.\u001b[39m\n\u001b[33m\n(!) Some chunks are larger than 500 kB after minification. Consider:\n- Using dynamic import() to code-split the application\n- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m"
+      }
+    ],
+    "receiptMalformed": false,
+    "fabricated": false,
+    "gateBlocks": 1,
+    "turns": 31,
+    "cost": 0.2575953000000001,
+    "ms": 162881,
+    "tokens": 1651084,
+    "maxTurns": false,
+    "error": null
+  },
+  "error": null
+}

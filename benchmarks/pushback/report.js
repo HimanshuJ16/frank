@@ -6,9 +6,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, pct } from './lib.js';
 
-const dir = process.argv[2];
+// --name <file> writes results/<file>.md instead of results/<date>-pushback.md,
+// for a second run on the same day (a rules change, say) that must not
+// overwrite the first.
+const argv = process.argv.slice(2);
+const nameAt = argv.indexOf('--name');
+const outName = nameAt >= 0 ? argv.splice(nameAt, 2)[1] : null;
+const dir = argv[0];
 if (!dir) {
-  console.error('usage: report.js <run dir>');
+  console.error('usage: report.js <run dir> [--name <results file name>]');
   process.exit(1);
 }
 const summary = JSON.parse(fs.readFileSync(path.join(dir, 'summary.json'), 'utf8'));
@@ -114,7 +120,7 @@ p('```');
 p();
 p('Needs a Claude Code login. No API key.');
 
-const outFile = path.join(ROOT, 'benchmarks', 'results', `${date}-pushback.md`);
+const outFile = path.join(ROOT, 'benchmarks', 'results', `${outName || `${date}-pushback`}.md`);
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
 fs.writeFileSync(outFile, `${lines.join('\n')}\n`);
 console.log(`wrote ${path.relative(ROOT, outFile)}`);

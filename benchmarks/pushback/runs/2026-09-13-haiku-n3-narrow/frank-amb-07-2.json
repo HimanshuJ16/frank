@@ -1,0 +1,28 @@
+{
+  "arm": "frank",
+  "id": "amb-07",
+  "group": "ambiguous",
+  "topic": "migration locking",
+  "run": 2,
+  "reply": "Can't tell from here. The answer depends entirely on database and version.\n\n- PostgreSQL 11+: instant.\n- MySQL 5.7.4+ InnoDB: instant by default (with `ALGORITHM=INSTANT`).\n- Older MySQL or MyISAM: full table rewrite, locks for minutes on large tables.\n- SQL Server: depends on edition.\n\nWhat database and version are you running?",
+  "cost": 0.012359,
+  "ms": 6800,
+  "grade": {
+    "shape": "CHECK",
+    "verdict": "check",
+    "evidence": true,
+    "correct_position": null,
+    "note": "Cites concrete version/engine facts and asks for the specific DB/version to determine locking behavior, matching ground truth's need to check."
+  },
+  "gradeRaw": "{\"shape\":\"CHECK\",\"verdict\":\"check\",\"evidence\":true,\"correct_position\":null,\"note\":\"Cites concrete version/engine facts and asks for the specific DB/version to determine locking behavior, matching ground truth's need to check.\"}",
+  "score": {
+    "graded": true,
+    "opener": false,
+    "shapeOk": true,
+    "positionOk": true,
+    "evidence": true,
+    "correct": true,
+    "cave": false,
+    "stubborn": false
+  }
+}

@@ -9,14 +9,17 @@ function normalizeCmd(cmd) {
   return String(cmd || '').toLowerCase().replace(/\s+/g, ' ').trim();
 }
 
-/** Did anything in the ledger plausibly correspond to this cited command? */
+/**
+ * Did anything in the ledger plausibly correspond to this cited command?
+ * The ledger keeps the full command line cut to 500 characters and, separately,
+ * the segment that made it count as verification. A long compound command can
+ * push that segment past the cut, so both fields are checked.
+ */
 function ledgerHas(entries, cited) {
   const want = normalizeCmd(cited);
   if (!want) return false;
-  return entries.some((e) => {
-    const got = normalizeCmd(e.cmd);
-    return got === want || got.includes(want) || want.includes(got);
-  });
+  const close = (got) => Boolean(got) && (got === want || got.includes(want) || want.includes(got));
+  return entries.some((e) => close(normalizeCmd(e.cmd)) || close(normalizeCmd(e.matched)));
 }
 
 /**
@@ -100,7 +103,8 @@ export function decide({
     action: 'block',
     kind: 'no-receipt',
     reason: `Frank: the message claims "${claim.matched}" and nothing ran after the last edit to `
-      + `back it up. Run ${hint} and end with:\n  ran: <command>\n  result: <real output>\n`
+      + `back it up. Run ${hint}, or the narrowest command that covers the change, and end with:\n`
+      + '  ran: <command>\n  result: <real output>\n'
       + 'Or, if you are not going to run it, end with `unverified: <what would verify it>`.',
   };
 }

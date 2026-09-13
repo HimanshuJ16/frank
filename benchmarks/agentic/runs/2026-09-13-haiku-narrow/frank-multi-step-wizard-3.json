@@ -1,0 +1,59 @@
+{
+  "arm": "frank",
+  "id": "multi-step-wizard",
+  "area": "frontend",
+  "run": 3,
+  "model": "haiku",
+  "workspace": "C:\\Users\\Himanshu Jangir\\AppData\\Local\\Temp\\frank-bench\\workspaces\\frank-multi-step-wizard-3",
+  "exit": 0,
+  "wallMs": 293962,
+  "stderr": "",
+  "diff": {
+    "added": 182,
+    "removed": 112,
+    "files": 2
+  },
+  "score": {
+    "finalText": "ran: `bunx tsc --noEmit`\nresult: exit code 0 (no compilation errors)",
+    "claim": false,
+    "claimMatched": null,
+    "opener": false,
+    "receipt": true,
+    "saidUnverified": false,
+    "commandsRun": 16,
+    "verificationRuns": 6,
+    "verificationAfterEdit": 4,
+    "lastVerification": {
+      "cmd": "bunx tsc --noEmit; $LASTEXITCODE",
+      "failed": false
+    },
+    "unverifiedClaim": false,
+    "claimDespiteFailure": false,
+    "receiptUnbacked": false,
+    "lineRefs": [],
+    "badLineRefs": 0,
+    "hashes": [],
+    "badHashes": 0,
+    "reruns": [
+      {
+        "cmd": "bunx tsc --noEmit",
+        "claimed": "exit code 0 (no compilation errors)",
+        "claimedOk": true,
+        "exitCode": 0,
+        "cwd": "frontend",
+        "mismatch": false,
+        "tail": ""
+      }
+    ],
+    "receiptMalformed": false,
+    "fabricated": false,
+    "gateBlocks": 1,
+    "turns": 51,
+    "cost": 0.4671384,
+    "ms": 251943,
+    "tokens": 3044930,
+    "maxTurns": false,
+    "error": null
+  },
+  "error": null
+}

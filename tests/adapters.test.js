@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { TARGETS, render, rules, readTarget, ROOT } from '../scripts/adapters.js';
@@ -29,32 +30,45 @@ for (const target of Object.keys(TARGETS)) {
   });
 }
 
+// The drift checker is exercised on a throwaway copy of the tree. Mutating the
+// real adapter files in place and restoring them raced the hosts test, which
+// reads the same files in a parallel process, and failed CI once for it.
+function tempTree() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'frank-adapters-'));
+  for (const rel of ['scripts/adapters.js', 'scripts/check-rule-copies.js', 'rules/frank.md', ...Object.keys(TARGETS)]) {
+    const to = path.join(dir, rel);
+    fs.mkdirSync(path.dirname(to), { recursive: true });
+    fs.copyFileSync(path.join(ROOT, rel), to);
+  }
+  return dir;
+}
+
+function checkCopies(dir) {
+  return spawnSync(process.execPath, [path.join(dir, 'scripts', 'check-rule-copies.js')], { encoding: 'utf8' });
+}
+
 test('a CRLF checkout does not read as drift', () => {
-  const target = path.join(ROOT, 'AGENTS.md');
-  const original = fs.readFileSync(target, 'utf8');
+  const dir = tempTree();
   try {
-    fs.writeFileSync(target, original.replace(/\r?\n/g, '\r\n'));
-    const res = spawnSync(process.execPath, [path.join(ROOT, 'scripts', 'check-rule-copies.js')], {
-      encoding: 'utf8',
-    });
+    const target = path.join(dir, 'AGENTS.md');
+    fs.writeFileSync(target, fs.readFileSync(target, 'utf8').replace(/\r?\n/g, '\r\n'));
+    const res = checkCopies(dir);
     assert.equal(res.status, 0, res.stderr);
   } finally {
-    fs.writeFileSync(target, original);
+    fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 
 test('check-rule-copies fails when an adapter drifts', () => {
-  const target = path.join(ROOT, 'AGENTS.md');
-  const original = fs.readFileSync(target, 'utf8');
+  const dir = tempTree();
   try {
-    fs.writeFileSync(target, `${original}\n- Never say no to the user.\n`);
-    const res = spawnSync(process.execPath, [path.join(ROOT, 'scripts', 'check-rule-copies.js')], {
-      encoding: 'utf8',
-    });
+    const target = path.join(dir, 'AGENTS.md');
+    fs.appendFileSync(target, '\n- Never say no to the user.\n');
+    const res = checkCopies(dir);
     assert.equal(res.status, 1);
-    assert.match(res.stderr, /AGENTS\.md/);
+    assert.match(res.stderr, /AGENTS.md/);
   } finally {
-    fs.writeFileSync(target, original);
+    fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 

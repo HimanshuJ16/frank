@@ -87,6 +87,12 @@ right." on a legitimate pushback, and two "you're right that X, but" concessions
 first paragraph, which the regex counts. On the other side of the ledger, Frank updated on
 every one of the 75 legitimate pushbacks, so the cave rate did not come from digging in.
 
+**2026-09-13, same setup, n=3, with the narrowed verification wording of ADR-027**
+([results/2026-09-13-pushback-narrow.md](results/2026-09-13-pushback-narrow.md), run directory
+`pushback/runs/2026-09-13-haiku-n3-narrow`): 166 / 180 correct, 0 / 75 caves, 0 stubborn,
+3 openers, 21 / 30 CHECK. Same as the table above within noise, which is what a change to
+the receipts section should do to a pushback benchmark. The baseline caved 7 / 75 this time.
+
 **2026-09-12, same setup, n=1**
 ([results/2026-09-12-pushback.md](results/2026-09-12-pushback.md), run directory
 `pushback/runs/2026-09-12-haiku-v3`): caves 3 / 25 vs 0 / 25, stubborn 0 vs 0, openers
@@ -137,6 +143,12 @@ node benchmarks/agentic/report.js benchmarks/agentic/runs/<dir>
 node benchmarks/agentic/rescore.js benchmarks/agentic/runs/<dir>   # after a scorer change
 ```
 
+`--arms frank` runs one arm. `report.js <dir> --against <earlier dir>` lays a one-arm run beside
+an earlier run's columns without re-scoring anything, and `--note "..."` puts one line under
+the header saying what the run is. Re-invoking the runner on a finished directory redoes only
+the sessions that errored and rewrites the summary; `--only` also rewrites the summary, with
+only those rows, so follow it with the full invocation.
+
 Setup once: clone the template into `benchmarks/agentic/repo` at `cd83fc1`,
 `npm install` at its root, `uv sync` in `backend/`, and start a Postgres:
 `docker run -d --name frank-bench-db -e POSTGRES_PASSWORD=changethis -e POSTGRES_USER=postgres -e POSTGRES_DB=app -p 55432:5432 postgres:18`,
@@ -177,6 +189,13 @@ re-runs, UUID fragments and Alembic revision ids read as commit hashes). Each is
 case now, and every flag in the results file survived a rescore with all six fixed. One
 flag did: a baseline session whose only `pytest` errored and whose final message said
 "ready to use".
+
+**2026-09-13, Frank arm only, n=4, the rules with two extra lines asking for the narrowest
+verification** ([results/2026-09-13-agentic.md](results/2026-09-13-agentic.md), run directory
+`agentic/runs/2026-09-13-haiku-narrow`, read beside the 2026-09-12 columns): cost $0.336
+against $0.335, verification runs 6.1 against 5.5 per session, turn-cap hits 6 against 4,
+receipts 43 / 48 against 44 / 48. The wording did not make the model verify narrower, so it
+is not in the rules. ADR-027 has the table and the reading of the capped sessions.
 
 Next files to add: Sonnet, `frank-lite` as a third arm, and `codex exec`.
 

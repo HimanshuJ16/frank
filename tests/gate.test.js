@@ -145,3 +145,16 @@ test('missing session state does not throw', () => {
   const r = decide({ message: CLAIM, mode: 'full' });
   assert.equal(r.action, 'block');
 });
+
+test('a receipt matches a command that the 500-character cut pushed out of the stored line', () => {
+  // The ledger keeps the command line truncated and the matched segment
+  // separately. A long compound command can carry the verification past the
+  // cut; the receipt must still match on the segment.
+  const long = `${'echo padding && '.repeat(40)}npm run check 2>&1 | tail -5`;
+  const stored = long.slice(0, 500);
+  assert.ok(!stored.includes('npm run check'), 'fixture must truncate past the verification');
+  const s = session({ evidence: [ev({ cmd: stored, matched: 'npm run check 2>&1', category: 'build' })] });
+  const r = decide({ message: 'Rebuilt.\nran: npm run check\nresult: 278 passed', session: s, mode: 'full' });
+  assert.equal(r.action, 'allow');
+  assert.equal(r.kind, 'receipt-matches-ledger');
+});

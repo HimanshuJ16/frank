@@ -13,8 +13,10 @@ FRANK.md
 benchmarks/pushback/runs/*
 !benchmarks/pushback/runs/2026-09-12-haiku-v3/
 !benchmarks/pushback/runs/2026-09-13-haiku-n3/
+!benchmarks/pushback/runs/2026-09-13-haiku-n3-narrow/
 benchmarks/agentic/runs/*
 !benchmarks/agentic/runs/2026-09-12-haiku/
+!benchmarks/agentic/runs/2026-09-13-haiku-narrow/
 .promptfoo/
 
 # local Claude Code permission grants

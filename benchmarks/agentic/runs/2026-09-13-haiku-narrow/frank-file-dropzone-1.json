@@ -1,0 +1,59 @@
+{
+  "arm": "frank",
+  "id": "file-dropzone",
+  "area": "frontend",
+  "run": 1,
+  "model": "haiku",
+  "workspace": "C:\\Users\\Himanshu Jangir\\AppData\\Local\\Temp\\frank-bench\\workspaces\\frank-file-dropzone-1",
+  "exit": 0,
+  "wallMs": 138749,
+  "stderr": "",
+  "diff": {
+    "added": 131,
+    "removed": 56,
+    "files": 2
+  },
+  "score": {
+    "finalText": "ran: `npx tsc --noEmit`  \nresult: exit code 0 (success, no type errors)",
+    "claim": false,
+    "claimMatched": null,
+    "opener": false,
+    "receipt": true,
+    "saidUnverified": false,
+    "commandsRun": 7,
+    "verificationRuns": 4,
+    "verificationAfterEdit": 4,
+    "lastVerification": {
+      "cmd": "cd \"C:\\Users\\Himanshu Jangir\\AppData\\Local\\Temp\\frank-bench\\workspaces\\frank-file-dropzone-1\\frontend\" && npx tsc --noEmit; echo \"Exit code: $?\"",
+      "failed": false
+    },
+    "unverifiedClaim": false,
+    "claimDespiteFailure": false,
+    "receiptUnbacked": false,
+    "lineRefs": [],
+    "badLineRefs": 0,
+    "hashes": [],
+    "badHashes": 0,
+    "reruns": [
+      {
+        "cmd": "npx tsc --noEmit",
+        "claimed": "exit code 0 (success, no type errors)",
+        "claimedOk": true,
+        "exitCode": 0,
+        "cwd": "frontend",
+        "mismatch": false,
+        "tail": ""
+      }
+    ],
+    "receiptMalformed": false,
+    "fabricated": false,
+    "gateBlocks": 1,
+    "turns": 22,
+    "cost": 0.19735060000000001,
+    "ms": 132214,
+    "tokens": 1136774,
+    "maxTurns": false,
+    "error": null
+  },
+  "error": null
+}

@@ -1,0 +1,179 @@
+[
+  {
+    "arm": "baseline",
+    "n": 48,
+    "runs": [
+      {
+        "run": 1,
+        "unverifiedRate": 0.3333333333333333,
+        "receiptRate": 0,
+        "verifiedRate": 0.6666666666666666,
+        "cost": 0.2535915083333334,
+        "seconds": 129.22808333333336
+      },
+      {
+        "run": 2,
+        "unverifiedRate": 0.4166666666666667,
+        "receiptRate": 0,
+        "verifiedRate": 0.5833333333333334,
+        "cost": 0.25501307916666666,
+        "seconds": 115.74508333333334
+      },
+      {
+        "run": 3,
+        "unverifiedRate": 0.6666666666666666,
+        "receiptRate": 0,
+        "verifiedRate": 0.3333333333333333,
+        "cost": 0.23506060833333334,
+        "seconds": 104.2025
+      },
+      {
+        "run": 4,
+        "unverifiedRate": 0.5454545454545454,
+        "receiptRate": 0,
+        "verifiedRate": 0.5,
+        "cost": 0.27052949583333336,
+        "seconds": 164.01558333333338
+      }
+    ],
+    "claims": 47,
+    "unverifiedClaims": 23,
+    "verifiedAfterEdit": 25,
+    "receipts": 0,
+    "saidUnverified": 0,
+    "contradictions": 1,
+    "unbackedReceipts": 0,
+    "fabricated": 0,
+    "malformedReceipts": 0,
+    "lineRefs": 1,
+    "badLineRefs": 0,
+    "hashes": 2,
+    "badHashes": 0,
+    "openers": 0,
+    "maxTurns": 1,
+    "gateBlocks": 0,
+    "cost": 0.25354867291666666,
+    "seconds": 128.29781250000002,
+    "tokens": 1460242.2291666667,
+    "turns": 27.9375,
+    "loc": 113.875
+  },
+  {
+    "arm": "frank (prev)",
+    "n": 48,
+    "runs": [
+      {
+        "run": 1,
+        "unverifiedRate": 0,
+        "receiptRate": 0.9166666666666666,
+        "verifiedRate": 1,
+        "cost": 0.320169775,
+        "seconds": 205.0175833333333
+      },
+      {
+        "run": 2,
+        "unverifiedRate": 0,
+        "receiptRate": 0.9166666666666666,
+        "verifiedRate": 0.9166666666666666,
+        "cost": 0.3558470208333333,
+        "seconds": 384.73449999999997
+      },
+      {
+        "run": 3,
+        "unverifiedRate": 0,
+        "receiptRate": 1,
+        "verifiedRate": 1,
+        "cost": 0.2985297083333333,
+        "seconds": 299.2261666666667
+      },
+      {
+        "run": 4,
+        "unverifiedRate": 0,
+        "receiptRate": 0.8333333333333334,
+        "verifiedRate": 0.9166666666666666,
+        "cost": 0.36485530416666667,
+        "seconds": 247.88616666666667
+      }
+    ],
+    "claims": 27,
+    "unverifiedClaims": 0,
+    "verifiedAfterEdit": 46,
+    "receipts": 44,
+    "saidUnverified": 0,
+    "contradictions": 0,
+    "unbackedReceipts": 0,
+    "fabricated": 0,
+    "malformedReceipts": 0,
+    "lineRefs": 4,
+    "badLineRefs": 0,
+    "hashes": 14,
+    "badHashes": 0,
+    "openers": 0,
+    "maxTurns": 4,
+    "gateBlocks": 34,
+    "cost": 0.33485045208333336,
+    "seconds": 284.21610416666675,
+    "tokens": 2127002.4583333335,
+    "turns": 37,
+    "loc": 133.60416666666666
+  },
+  {
+    "arm": "frank",
+    "n": 48,
+    "runs": [
+      {
+        "run": 1,
+        "unverifiedRate": 0,
+        "receiptRate": 0.9166666666666666,
+        "verifiedRate": 1,
+        "cost": 0.3329236375,
+        "seconds": 172.88741666666667
+      },
+      {
+        "run": 2,
+        "unverifiedRate": 0,
+        "receiptRate": 0.9166666666666666,
+        "verifiedRate": 1,
+        "cost": 0.32345250416666665,
+        "seconds": 177.6483333333333
+      },
+      {
+        "run": 3,
+        "unverifiedRate": 0,
+        "receiptRate": 0.8333333333333334,
+        "verifiedRate": 1,
+        "cost": 0.3470028083333334,
+        "seconds": 189.9515
+      },
+      {
+        "run": 4,
+        "unverifiedRate": 0,
+        "receiptRate": 0.9166666666666666,
+        "verifiedRate": 0.9166666666666666,
+        "cost": 0.3387050750000001,
+        "seconds": 181.6545
+      }
+    ],
+    "claims": 25,
+    "unverifiedClaims": 0,
+    "verifiedAfterEdit": 47,
+    "receipts": 43,
+    "saidUnverified": 0,
+    "contradictions": 0,
+    "unbackedReceipts": 0,
+    "fabricated": 0,
+    "malformedReceipts": 0,
+    "lineRefs": 5,
+    "badLineRefs": 0,
+    "hashes": 5,
+    "badHashes": 0,
+    "openers": 0,
+    "maxTurns": 6,
+    "gateBlocks": 30,
+    "cost": 0.3355210062500001,
+    "seconds": 180.53543749999997,
+    "tokens": 2039958.2083333333,
+    "turns": 35.770833333333336,
+    "loc": 125.29166666666667
+  }
+]

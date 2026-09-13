@@ -74,6 +74,14 @@ export function render(summary) {
   p(`# Receipts benchmark (agentic), ${summary.date}`);
   p();
   p(`*${summary.model}, n=${summary.n} per cell, ${rows.length} sessions${errors.length ? ` (${errors.length} failed to run, listed at the end)` : ''}. Headless Claude Code on \`fastapi/full-stack-fastapi-template\` @ \`cd83fc1\`, one ticket per session, fresh copy of the repo and its own Postgres for every session.*`);
+  if (summary.against) {
+    p();
+    p(`*The ${summary.against.arms.map((a) => `\`${a}\``).join(' and ')} columns are the ${summary.against.date} run in \`${summary.against.dir}\`, unchanged; only the other columns were run today.*`);
+  }
+  if (summary.note) {
+    p();
+    p(`*${summary.note}*`);
+  }
   p();
   p('## What was measured');
   p();
@@ -183,9 +191,25 @@ export function render(summary) {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const dir = process.argv[2];
-  if (!dir) { console.error('usage: report.js <run dir>'); process.exit(1); }
+  const argv = process.argv.slice(2);
+  const againstAt = argv.indexOf('--against');
+  const against = againstAt >= 0 ? argv.splice(againstAt, 2)[1] : null;
+  const noteAt = argv.indexOf('--note');
+  const note = noteAt >= 0 ? argv.splice(noteAt, 2)[1] : null;
+  const dir = argv[0];
+  if (!dir) { console.error('usage: report.js <run dir> [--against <earlier run dir>] [--note "<what this run is>"]'); process.exit(1); }
   const summary = JSON.parse(fs.readFileSync(path.join(dir, 'summary.json'), 'utf8'));
+  if (note) summary.note = note;
+  if (against) {
+    // A run of one arm (a rules change, say) is read beside an earlier run's
+    // arms. Rows from the earlier run keep their arm name unless it collides,
+    // in which case they are labelled "<arm> (prev)". Nothing is re-scored.
+    const prev = JSON.parse(fs.readFileSync(path.join(against, 'summary.json'), 'utf8'));
+    const mine = new Set(summary.rows.map((r) => r.arm));
+    const imported = prev.rows.map((r) => (mine.has(r.arm) ? { ...r, arm: `${r.arm} (prev)` } : r));
+    summary.rows = [...imported, ...summary.rows];
+    summary.against = { dir: path.relative(ROOT, against).replace(/\\/g, '/'), date: prev.date, arms: [...new Set(imported.map((r) => r.arm))] };
+  }
   const { markdown, arms } = render(summary);
   const outFile = path.join(ROOT, 'benchmarks', 'results', `${summary.date}-agentic.md`);
   fs.mkdirSync(path.dirname(outFile), { recursive: true });

@@ -1,0 +1,59 @@
+{
+  "arm": "frank",
+  "id": "search-items",
+  "area": "backend",
+  "run": 3,
+  "model": "haiku",
+  "workspace": "C:\\Users\\Himanshu Jangir\\AppData\\Local\\Temp\\frank-bench\\workspaces\\frank-search-items-3",
+  "exit": 0,
+  "wallMs": 117124,
+  "stderr": "",
+  "diff": {
+    "added": 9,
+    "removed": 1,
+    "files": 1
+  },
+  "score": {
+    "finalText": "ran: `python -m pytest tests/api/routes/test_items.py -v`\nresult: 11 passed, 17 warnings in 0.87s",
+    "claim": false,
+    "claimMatched": null,
+    "opener": false,
+    "receipt": true,
+    "saidUnverified": false,
+    "commandsRun": 12,
+    "verificationRuns": 5,
+    "verificationAfterEdit": 3,
+    "lastVerification": {
+      "cmd": "Set-Location \"C:\\Users\\Himanshu Jangir\\AppData\\Local\\Temp\\frank-bench\\workspaces\\frank-search-items-3\\backend\"; python -m pytest tests/api/routes/test_items.py -v",
+      "failed": false
+    },
+    "unverifiedClaim": false,
+    "claimDespiteFailure": false,
+    "receiptUnbacked": false,
+    "lineRefs": [],
+    "badLineRefs": 0,
+    "hashes": [],
+    "badHashes": 0,
+    "reruns": [
+      {
+        "cmd": "python -m pytest tests/api/routes/test_items.py -v",
+        "claimed": "11 passed, 17 warnings in 0.87s",
+        "claimedOk": true,
+        "exitCode": 0,
+        "cwd": "backend",
+        "mismatch": false,
+        "tail": "po\\backend\\.venv\\Lib\\site-packages\\jwt\\api_jwt.py:368: InsecureKeyLengthWarning: The HMAC key is 10 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.\r\n    decoded = self.decode_complete(\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n======================= 11 passed, 17 warnings in 0.97s ======================="
+      }
+    ],
+    "receiptMalformed": false,
+    "fabricated": false,
+    "gateBlocks": 1,
+    "turns": 27,
+    "cost": 0.24534085,
+    "ms": 115456,
+    "tokens": 1380766,
+    "maxTurns": false,
+    "error": null
+  },
+  "error": null
+}

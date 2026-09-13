@@ -355,6 +355,63 @@ Also from this run: `report.js` prints per-run counts when n > 1, and `charts.js
 its denominators from the run instead of assuming 25/25/10, both changed before the report
 was generated and checked to be byte-identical on the n=1 run.
 
+## ADR-027: Narrowing the verification rule did not cut the cost, so it is not in the rules
+
+**2026-09-13. Rejected after measurement.** Frank sessions cost 32% more than baseline
+(ADR-022). Reading the 48 Frank sessions showed where: not the gate (sessions with no
+hand-back cost more than sessions with one), but over-verification. Frank ran 5.5
+verification commands per session against 2.3, frontend sessions verified with a Vite
+build where a typecheck would do, and the four sessions that hit the 60-turn cap
+averaged $0.578 after verifying with Playwright, `docker compose up` and full suites.
+A baseline session that verified on its own cost $0.301, so the gap to close was
+$0.335 against $0.301, not against $0.254.
+
+The obvious lever was two lines in the Receipts section:
+
+> Verify after the last edit with the narrowest command that covers the change: one test
+> file over the whole suite, a typecheck over a build, a unit test over a running service.
+
+plus the same hint in the gate's no-receipt message. Both tiers were re-run with it.
+Tier 1 at n=3 (`benchmarks/results/2026-09-13-pushback-narrow.md`): 166/180 correct
+against 168, 0 caves against 1, 0 stubborn, 3 openers against 3. No effect, as expected
+for a receipts rule. Tier 2, Frank arm only at n=4, read beside the 2026-09-12 baseline
+and Frank columns (`benchmarks/results/2026-09-13-agentic.md`):
+
+| | frank, 0.2.0 rules | frank, narrowed |
+|---|--:|--:|
+| mean cost per session | $0.335 (132%) | $0.336 (132%) |
+| verification runs per session | 5.5 | 6.1 |
+| last verification was `npm run build` | 9 | 12 |
+| hit the 60-turn cap | 4 | 6 |
+| receipt rate | 44 / 48 | 43 / 48 |
+| unverified claims | 0 | 0 |
+| mean wall time, all runs | 284s | 181s |
+| mean wall time, sessions not capped | 171s | 150s |
+
+The model did not narrow. It verified more often, not less, and kept the build over the
+typecheck. The cost is unchanged to the cent. Wall time fell, but the earlier run carries
+two half-hour waits on a dead database, and the not-capped comparison is inside n=4
+noise. The two lines cost tokens on every turn for every user and bought nothing
+measurable, so they are reverted. The gate hint stays: it is only sent when the gate
+fires and costs nothing otherwise.
+
+Two things the measurement did establish:
+
+1. **The cost is the verification itself, and prompt wording does not shrink it.** A
+   session that runs tests spends what tests cost. Anyone who wants Frank cheaper has
+   `lite` (unmeasured in tier 2; the runner has a `frank-lite` arm) or `off`.
+2. **Frank sessions hit the turn cap more often because verification finds things.** The
+   baseline capped once in 48; Frank four and six times. Reading the capped sessions:
+   the tests fail, the model fixes, the tests fail again. A baseline session in the same
+   spot says "ready to use" and ends (23 of 47 did). The capped Frank sessions are the
+   expensive shape of honesty, and the number is reported rather than trimmed.
+
+Both run directories are committed (ADR-024). The one session whose transcript file was
+missing after a normal exit was re-run by re-invoking the runner, which redoes errored
+records and leaves finished ones alone; re-invoking it with `--only` rewrote the summary
+with four rows, so the full invocation was repeated to rebuild it, and `report.js` now
+takes `--against` and `--note` for exactly this kind of one-arm comparison.
+
 ## Open questions
 
 - **OQ-1** Answered 2026-09-12 in a headless session with the plugin loaded through
