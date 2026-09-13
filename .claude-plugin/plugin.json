@@ -5,7 +5,8 @@
   "version": "0.1.0",
   "description": "Verdict first, receipts attached. Stops the agent flattering you, caving under pushback, or saying \"done\" without running anything.",
   "author": {
-    "name": "Frank contributors"
+    "name": "Himanshu Jangir",
+    "url": "https://github.com/HimanshuJ16"
   },
   "homepage": "https://github.com/HimanshuJ16/frank",
   "repository": "https://github.com/HimanshuJ16/frank",
@@ -17,5 +18,13 @@
     "receipts",
     "behavior"
   ],
-  "hooks": "./hooks/claude-codex-hooks.json"
+  "hooks": "./hooks/claude-codex-hooks.json",
+  "userConfig": {
+    "mode": {
+      "type": "string",
+      "title": "Mode",
+      "description": "off, lite, full or ultra. full: rules every turn, the receipts gate asks once. ultra: asks twice and blocks flattery. lite: reports only. off: nothing. /frank <mode> overrides this for now; /frank default comes back to it.",
+      "default": "full"
+    }
+  }
 }

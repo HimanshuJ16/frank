@@ -5,7 +5,7 @@
 // so the same hook runs on every prompt too. It also handles `/frank <mode>`
 // for hosts that do not route slash commands to the skill.
 import { run } from './lib/io.js';
-import { getMode, setMode, normalizeMode, pruneSessions } from './lib/state.js';
+import { getMode, setMode, clearMode, normalizeMode, pruneSessions } from './lib/state.js';
 import { rulesText, frameForInjection } from './lib/ruleset.js';
 import { host, contextOutput } from './lib/host.js';
 
@@ -19,10 +19,19 @@ run('inject', (input) => {
 
   if (event === 'UserPromptSubmit') {
     const match = MODE_COMMAND.exec(input.prompt || '');
-    const requested = match && normalizeMode(match[1]);
-    if (requested && requested !== mode) {
-      mode = setMode(requested) || mode;
-      switched = mode === requested;
+    const arg = match ? String(match[1] || '').toLowerCase() : '';
+    if (arg === 'default') {
+      // Back to the configured setting: drop the /frank switch.
+      clearMode();
+      const next = getMode();
+      switched = next !== mode;
+      mode = next;
+    } else {
+      const requested = normalizeMode(arg);
+      if (requested && requested !== mode) {
+        mode = setMode(requested) || mode;
+        switched = mode === requested;
+      }
     }
   }
 

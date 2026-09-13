@@ -41,17 +41,28 @@ export function normalizeMode(value) {
 }
 
 /**
- * Resolution order: FRANK_MODE (hard override) -> runtime state.json (set by /frank)
- * -> FRANK_DEFAULT_MODE -> config.json -> "full".
+ * Where the mode comes from, first match wins:
+ *   FRANK_MODE                  hard override for one process
+ *   state.json                  a /frank switch, until /frank default clears it
+ *   CLAUDE_PLUGIN_OPTION_MODE   the plugin's Mode setting in Claude Code
+ *   FRANK_DEFAULT_MODE          environment default
+ *   config.json                 ~/.config/frank/config.json {"mode": ...}
+ *   "full"
  */
+export function resolveMode() {
+  const candidates = [
+    ['FRANK_MODE', normalizeMode(process.env.FRANK_MODE)],
+    ['/frank', normalizeMode(readJson(STATE_FILE(), {}).mode)],
+    ['plugin setting', normalizeMode(process.env.CLAUDE_PLUGIN_OPTION_MODE)],
+    ['FRANK_DEFAULT_MODE', normalizeMode(process.env.FRANK_DEFAULT_MODE)],
+    ['config.json', normalizeMode(readJson(CONFIG_FILE(), {}).mode)],
+  ];
+  for (const [source, mode] of candidates) if (mode) return { mode, source };
+  return { mode: DEFAULT_MODE, source: 'default' };
+}
+
 export function getMode() {
-  return (
-    normalizeMode(process.env.FRANK_MODE) ||
-    normalizeMode(readJson(STATE_FILE(), {}).mode) ||
-    normalizeMode(process.env.FRANK_DEFAULT_MODE) ||
-    normalizeMode(readJson(CONFIG_FILE(), {}).mode) ||
-    DEFAULT_MODE
-  );
+  return resolveMode().mode;
 }
 
 export function setMode(value) {
@@ -61,6 +72,15 @@ export function setMode(value) {
   state.mode = mode;
   state.updated = new Date().toISOString();
   return writeJson(STATE_FILE(), state) ? mode : null;
+}
+
+/** Drop the /frank override so the configured default applies again. */
+export function clearMode() {
+  const state = readJson(STATE_FILE(), {});
+  if (!('mode' in state)) return true;
+  delete state.mode;
+  state.updated = new Date().toISOString();
+  return writeJson(STATE_FILE(), state);
 }
 
 export function getConfig() {

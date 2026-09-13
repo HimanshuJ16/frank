@@ -277,9 +277,9 @@ That was it. He would say so if it weren't.
 
 ### Configuration
 
-None required. `FRANK_DEFAULT_MODE` (`off`, `lite`, `full`, `ultra`) or a `"mode"` field
-in `~/.config/frank/config.json` (`%APPDATA%\frank\config.json` on Windows) sets the
-starting mode. `FRANK_MODE` overrides everything for one process. Default is `full`.
+None required. On Claude Code the plugin asks for a **Mode** when you enable it and
+remembers it; see [Modes](#modes) for the other ways to set it and which one wins.
+Default is `full`.
 
 The rules also go into every subagent. `FRANK_SUBAGENT_MATCHER` scopes that to agent types
 matching a regex (unanchored, case-insensitive; `explore|general`, or `^general$` for exact).
@@ -329,6 +329,19 @@ Qoder, Devin, Grok). The rules-only adapters load the rules without them.
 | `ultra` | same | asks twice, and blocks a message that opens with flattery |
 
 `full` is the default. `ultra` is for when the agent has wronged you personally.
+
+Three ways to set it, in the order they win:
+
+1. `/frank` with no argument shows a picker; `/frank ultra` switches directly. A switch
+   sticks until the next one, or until `/frank default` hands control back.
+2. The plugin's **Mode** setting in Claude Code, asked for when you enable Frank and kept
+   in your settings. Change it later with `claude plugin install frank@frank --config mode=ultra`
+   or by editing `pluginConfigs` in `~/.claude/settings.json`.
+3. `FRANK_DEFAULT_MODE` in the environment, or `"mode"` in `~/.config/frank/config.json`,
+   for hosts that have no plugin settings.
+
+`FRANK_MODE` in the environment overrides all three for one process. `/frank` with no
+argument also tells you which of these the current mode came from.
 
 ## Development
 

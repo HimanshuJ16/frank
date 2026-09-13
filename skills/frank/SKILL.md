@@ -54,12 +54,22 @@ A question that has a factual answer gets the answer, not options.
 
 ## Modes
 
-If invoked with an argument (`$ARGUMENTS`), run this and report its one line
-of output, nothing more:
+Argument: `$ARGUMENTS`.
+
+With no argument, first run the script below with no argument to learn the current
+mode, then ask the user to pick one with AskUserQuestion. Four options, the current one
+first and marked "(current)": `full`, `ultra`, `lite`, `off`. Add a fifth,
+`default`, only when the script says the mode comes from `/frank`; it drops the
+switch and goes back to the configured setting. Then run the script with the choice.
+
+With an argument (`off`, `lite`, `full`, `ultra` or `default`), skip the
+question and run:
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/scripts/mode.js" $ARGUMENTS
 ```
+
+Report the script's one line of output. Nothing else.
 
 | mode | what changes |
 |---|---|
@@ -68,4 +78,6 @@ node "${CLAUDE_PLUGIN_ROOT}/scripts/mode.js" $ARGUMENTS
 | `full` | Default. Rules injected every turn and into subagents. The gate asks once per turn for a receipt. |
 | `ultra` | The gate asks twice, and also blocks a message that opens with flattery. |
 
-The mode persists until changed. `FRANK_MODE` in the environment overrides it.
+A switch persists until the next switch or `default`. The configured default is the
+plugin's Mode setting in Claude Code, or `FRANK_DEFAULT_MODE`, or `config.json`.
+`FRANK_MODE` in the environment overrides all of it for one process.

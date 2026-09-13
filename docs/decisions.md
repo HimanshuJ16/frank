@@ -273,6 +273,29 @@ Decision: the README headline is tier 2's unverified-claim rate and receipt rate
 tier 1's cave rate beside it, and the cost increase in the same sentence. n=1 is stated
 everywhere the numbers appear. The next run is n=4, then Sonnet.
 
+## ADR-023: The mode is a plugin setting, `/frank` is a picker, and a switch can be undone
+
+**2026-09-13. Accepted.** After the first live install, the request was a setting rather
+than a word to type. Claude Code plugins get exactly one settings surface, `userConfig`
+in `plugin.json`: a dialog at enable time, the value kept under `pluginConfigs` in the
+user's settings and handed to hooks as `CLAUDE_PLUGIN_OPTION_MODE`. So:
+
+- `userConfig.mode` (default `full`) is the configured default on Claude Code.
+- `/frank` with no argument asks with a picker instead of printing "no argument";
+  `/frank <mode>` switches without asking. Both go through `scripts/mode.js`.
+- A switch used to persist forever and silently outrank any later setting. Now
+  `/frank default` clears it, and `mode.js` reports where the current mode came from.
+
+Resolution, first match wins: `FRANK_MODE`, the `/frank` switch, the plugin setting,
+`FRANK_DEFAULT_MODE`, `config.json`, `full`. The plugin setting sits below the switch on
+purpose: a setting is what you want most days, a switch is what you want right now.
+`tests/mode.test.js` pins the order.
+
+Not done: a live picker for hosts without skills (Cursor, Windsurf and the rest get rules
+only, so there is no mode to pick), and Codex, whose plugin manifest has no `userConfig`
+equivalent as far as its docs say; there, `@frank <mode>` and `FRANK_DEFAULT_MODE` remain
+the ways in.
+
 ## Open questions
 
 - **OQ-1** Answered 2026-09-12 in a headless session with the plugin loaded through

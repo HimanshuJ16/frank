@@ -33,10 +33,14 @@ namespaces them (`/frank:frank ultra`).
 | `full` | Default. Rules injected every turn and into subagents. The gate asks once per turn for a receipt. |
 | `ultra` | The gate asks twice, and blocks a message that opens with flattery. |
 
-The mode sticks until changed. `FRANK_MODE` in the environment overrides it
-for that process. `FRANK_DEFAULT_MODE`, or `"mode"` in
-`~/.config/frank/config.json` (`%APPDATA%\frank\config.json` on Windows), sets
-the starting point.
+`/frank` with no argument shows a picker and says where the current mode came
+from. A switch sticks until the next one; `/frank default` hands control back
+to the configured default. That default is the plugin's Mode setting in Claude
+Code (asked for when Frank is enabled; change it with
+`claude plugin install frank@frank --config mode=ultra`), or on other hosts
+`FRANK_DEFAULT_MODE` or `"mode"` in `~/.config/frank/config.json`
+(`%APPDATA%\frank\config.json` on Windows). `FRANK_MODE` in the environment
+overrides everything for that process.
 
 ## The three shapes on pushback
 
