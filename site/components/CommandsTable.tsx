@@ -51,7 +51,7 @@ Exit code agreement: 100% (re-run verified)`,
     cmd: "/frank-help",
     args: "",
     desc: "Display quick command reference and rule enforcement parameters.",
-    simulatedOutput: `Frank v0.2.0 - Honest Senior Dev Mode
+    simulatedOutput: `Frank v0.2.1 - Honest Senior Dev Mode
 Commands: /frank, /frank-verify, /frank-review, /frank-stats, /frank-help
 Repository: https://github.com/HimanshuJ16/frank`,
   },

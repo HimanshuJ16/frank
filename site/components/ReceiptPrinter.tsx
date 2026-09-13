@@ -107,7 +107,7 @@ function BarcodeSvg() {
         <rect x="197" y="0" width="3" height="30" />
       </svg>
       <span className="mt-1.5 text-[9px] tracking-wider text-[#4b5563] font-mono font-semibold uppercase">
-        NO RECEIPT, NO DONE · FRANK v0.2.0
+        NO RECEIPT, NO DONE · FRANK v0.2.1
       </span>
     </div>
   );
@@ -245,7 +245,7 @@ export default function ReceiptPrinter() {
                     }`}
                   />
                   <span className="font-bold text-[#f1f4fa]">
-                    FRANK HARDWARE LEDGER v0.2.0
+                    FRANK HARDWARE LEDGER v0.2.1
                   </span>
                 </div>
 
