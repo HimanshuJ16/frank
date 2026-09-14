@@ -9,10 +9,13 @@ import { debug } from './state.js';
 // thrown away. Collect what arrives, and after a short grace period go with
 // that (ponytail hit the same thing, their issue #443).
 const STDIN_GRACE_MS = 1000;
+// Hooks receive small JSON event objects. Refuse an unexpectedly huge payload
+// rather than keeping it in memory; malformed input already fails open.
+const MAX_INPUT_BYTES = 1024 * 1024;
 
 export function parseInput(raw) {
   try {
-    const text = String(raw || '').replace(/^﻿/, '').trim();
+    const text = String(raw || '').replace(/^\uFEFF/, '').trim();
     if (!text) return {};
     const parsed = JSON.parse(text);
     return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
@@ -28,6 +31,7 @@ export function readInput() {
       return;
     }
     let raw = '';
+    let bytes = 0;
     let done = false;
     const finish = () => {
       if (done) return;
@@ -35,7 +39,15 @@ export function readInput() {
       resolve(parseInput(raw));
     };
     process.stdin.setEncoding('utf8');
-    process.stdin.on('data', (chunk) => { raw += chunk; });
+    process.stdin.on('data', (chunk) => {
+      bytes += Buffer.byteLength(chunk);
+      if (bytes > MAX_INPUT_BYTES) {
+        raw = '';
+        finish();
+        return;
+      }
+      raw += chunk;
+    });
     process.stdin.on('end', finish);
     process.stdin.on('error', finish);
     setTimeout(finish, STDIN_GRACE_MS).unref();

@@ -107,9 +107,9 @@ test('splitCommands handles chains', () => {
 });
 
 test('evidenceAfter filters by timestamp', () => {
-  const session = { evidence: [{ ts: 10 }, { ts: 30 }] };
+  const session = { evidence: [{ ts: 10 }, { ts: 20 }, { ts: 30 }] };
   assert.equal(evidenceAfter(session, 20).length, 1);
-  assert.equal(evidenceAfter(session, 0).length, 2);
+  assert.equal(evidenceAfter(session, 0).length, 3);
   assert.equal(evidenceAfter({}, 0).length, 0);
 });
 

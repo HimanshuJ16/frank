@@ -1,7 +1,7 @@
 {
   "name": "@himanshujangir/frank",
   "version": "0.2.1",
-  "description": "Honest senior dev mode for AI agents. Verdict first, receipts attached.",
+  "description": "Local receipt and pushback guardrails for AI coding agents.",
   "keywords": [
     "opencode-plugin",
     "opencode",

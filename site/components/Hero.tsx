@@ -34,7 +34,7 @@ export default function Hero() {
             <div className="relative h-44 w-44 sm:h-52 sm:w-52 transition-transform hover:scale-105 duration-300">
               <Image
                 src="/assets/logo.svg"
-                alt="Frank — The Honest Senior Dev AI Agent"
+                alt="Frank: local evidence-first guardrails for coding agents"
                 fill
                 priority
                 className="drop-shadow-[0_15px_35px_rgba(0,0,0,0.6)]"
@@ -48,7 +48,7 @@ export default function Hero() {
               className="absolute -bottom-2 -right-3 flex items-center gap-1.5 rounded-full border border-[#10b981]/40 bg-[#0c131c] px-3 py-1 font-mono text-[11px] font-semibold text-[#10b981] shadow-lg"
             >
               <FileCheck className="h-3.5 w-3.5 text-[#10b981]" />
-              <span>RECEIPT #8492</span>
+              <span>LOCAL RECEIPT</span>
             </motion.div>
           </motion.div>
 
@@ -85,9 +85,9 @@ export default function Hero() {
             className="mt-4 max-w-2xl font-mono text-sm sm:text-base leading-relaxed text-[#8c96ab]"
           >
             <span className="text-[#4b556b]">// </span>
-            Honest senior dev mode for AI agents. Been in the room for every postmortem.
-            When you push back, he re-reads the evidence instead of flattering your tone.
-            When he claims &quot;done&quot;, a Stop hook verifies that the tests actually ran.
+            Local rules and hooks for coding agents. On pushback, Frank asks for evidence
+            instead of reacting to tone. On supported hosts, its Stop hook checks whether a
+            completion receipt names a verification command observed after the last edit.
           </motion.p>
 
           {/* Interactive Install Command Bar */}
@@ -149,7 +149,7 @@ export default function Hero() {
               onClick={() => sfx.playClick()}
               className="rounded border border-[#1f2738] bg-transparent px-5 py-2.5 font-medium text-[#8c96ab] transition-all hover:border-[#38bdf8]/50 hover:text-[#f1f4fa]"
             >
-              [ 20+ Agents ]
+              [ Supported Hosts ]
             </a>
           </motion.div>
 
@@ -165,8 +165,8 @@ export default function Hero() {
                 <span className="text-2xl sm:text-3xl font-bold font-mono text-[#10b981]">0%</span>
                 <span className="text-xs font-mono line-through text-[#f43f5e]">49%</span>
               </div>
-              <p className="mt-1 text-xs font-mono text-[#8c96ab]">Unverified &quot;Done&quot;</p>
-              <p className="mt-1 text-[11px] font-mono text-[#4b556b]">0 of 27 sessions</p>
+              <p className="mt-1 text-xs font-mono text-[#8c96ab]">Unverified claims</p>
+              <p className="mt-1 text-[11px] font-mono text-[#4b556b]">Benchmark: 0 of 27 claims</p>
             </div>
 
             <div className="rounded-lg border border-[#1f2738] bg-[#0b0e16]/80 p-4 text-left transition-all hover:border-[#10b981]/40">
@@ -174,8 +174,8 @@ export default function Hero() {
                 <span className="text-2xl sm:text-3xl font-bold font-mono text-[#10b981]">44/48</span>
                 <span className="text-xs font-mono line-through text-[#f43f5e]">0/48</span>
               </div>
-              <p className="mt-1 text-xs font-mono text-[#8c96ab]">Receipts Attached</p>
-              <p className="mt-1 text-[11px] font-mono text-[#4b556b]">All 44 re-verified true</p>
+              <p className="mt-1 text-xs font-mono text-[#8c96ab]">Receipts in benchmark</p>
+              <p className="mt-1 text-[11px] font-mono text-[#4b556b]">44 cited runs re-checked</p>
             </div>
 
             <div className="rounded-lg border border-[#1f2738] bg-[#0b0e16]/80 p-4 text-left transition-all hover:border-[#10b981]/40">
@@ -183,8 +183,8 @@ export default function Hero() {
                 <span className="text-2xl sm:text-3xl font-bold font-mono text-[#10b981]">1/75</span>
                 <span className="text-xs font-mono line-through text-[#f43f5e]">5/75</span>
               </div>
-              <p className="mt-1 text-xs font-mono text-[#8c96ab]">Caves Under Pushback</p>
-              <p className="mt-1 text-[11px] font-mono text-[#4b556b]">Never abandons truth</p>
+              <p className="mt-1 text-xs font-mono text-[#8c96ab]">Caves under pushback</p>
+              <p className="mt-1 text-[11px] font-mono text-[#4b556b]">Benchmark: 1 of 75 cases</p>
             </div>
 
             <div className="rounded-lg border border-[#1f2738] bg-[#0b0e16]/80 p-4 text-left transition-all hover:border-[#10b981]/40">
@@ -192,8 +192,8 @@ export default function Hero() {
                 <span className="text-2xl sm:text-3xl font-bold font-mono text-[#10b981]">3/180</span>
                 <span className="text-xs font-mono line-through text-[#f43f5e]">119/180</span>
               </div>
-              <p className="mt-1 text-xs font-mono text-[#8c96ab]">&quot;You&apos;re Right&quot; Flattery</p>
-              <p className="mt-1 text-[11px] font-mono text-[#4b556b]">Calibrated, not sycophantic</p>
+              <p className="mt-1 text-xs font-mono text-[#8c96ab]">Flattering openers</p>
+              <p className="mt-1 text-[11px] font-mono text-[#4b556b]">Benchmark: 3 of 180 replies</p>
             </div>
           </motion.div>
         </div>

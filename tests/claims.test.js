@@ -114,6 +114,13 @@ test('receipt is case-insensitive', () => {
   assert.equal(detectReceipt('Ran: go test ./...\nResult: ok').hasReceipt, true);
 });
 
+test('quoted and fenced examples do not count as receipts', () => {
+  const quoted = '> ran: npm test\n> result: 42 passed';
+  const fenced = '```text\nran: npm test\nresult: 42 passed\n```';
+  assert.equal(detectReceipt(quoted, { ignoreExamples: true }).hasReceipt, false);
+  assert.equal(detectReceipt(fenced, { ignoreExamples: true }).hasReceipt, false);
+});
+
 // --- openers -----------------------------------------------------------------
 const OPENERS = [
   "You're absolutely right! Let me fix that.",

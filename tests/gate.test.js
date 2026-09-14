@@ -93,6 +93,27 @@ test('a receipt backed by the ledger passes', () => {
   assert.equal(r.kind, 'receipt-matches-ledger');
 });
 
+test('a receipt for a failed command is blocked', () => {
+  const msg = `${CLAIM}\n\nran: npm test\nresult: 42 passed, 0 failed`;
+  const r = decide({
+    message: msg, session: session({ evidence: [ev({ exitCode: 1 })] }), mode: 'full',
+  });
+  assert.equal(r.action, 'block');
+  assert.equal(r.kind, 'receipt-failed');
+  assert.match(r.reason, /exited 1/);
+});
+
+test('the most recent matching receipt command decides its exit status', () => {
+  const msg = `${CLAIM}\n\nran: npm test\nresult: 42 passed, 0 failed`;
+  const r = decide({
+    message: msg,
+    session: session({ evidence: [ev({ ts: 200, exitCode: 1 }), ev({ ts: 300, exitCode: 0 })] }),
+    mode: 'full',
+  });
+  assert.equal(r.action, 'allow');
+  assert.equal(r.kind, 'receipt-matches-ledger');
+});
+
 test('a receipt citing a command that never ran is blocked', () => {
   const msg = `${CLAIM}\n\nran: pytest -q\nresult: 118 passed`;
   const r = decide({ message: msg, session: session({ evidence: [ev()] }), mode: 'full' });

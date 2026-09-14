@@ -23,8 +23,8 @@ export default function BenchmarkSection() {
             Numbers With The Limits Attached
           </h2>
           <p className="mt-2 font-mono text-sm text-[#8c96ab]">
-            Measured on 96 real headless Claude Code sessions (Haiku 4.5, n=4) editing a real open-source repo,
-            the same FastAPI + React template and twelve tickets ponytail used; and 60 hand-written pushback scenarios.
+            A limited, reproducible experiment: one model, 48 baseline and 48 Frank sessions on twelve tickets,
+            plus 60 hand-written pushback scenarios. Read the run files and limitations before generalising.
           </p>
         </div>
 
@@ -37,7 +37,7 @@ export default function BenchmarkSection() {
               <span className="text-sm line-through text-[#f43f5e]">49%</span>
             </div>
             <p className="mt-2 text-xs font-mono text-[#8c96ab]">
-              Baseline claimed &quot;done&quot; 23 of 47 times without running anything. Frank: 0 in every single run.
+              In this benchmark, baseline made 23 of 47 completion claims without a post-edit verification; Frank made 0 of 27.
             </p>
           </div>
 
@@ -48,7 +48,7 @@ export default function BenchmarkSection() {
               <span className="text-sm line-through text-[#f43f5e]">0/48</span>
             </div>
             <p className="mt-2 text-xs font-mono text-[#8c96ab]">
-              Every single Frank receipt was re-run in the workspace afterwards; all 44 were 100% true.
+              The project re-ran the 44 cited commands in their workspaces after the sessions; none disagreed with its receipt.
             </p>
           </div>
 
@@ -59,7 +59,7 @@ export default function BenchmarkSection() {
               <span className="text-sm line-through text-[#f43f5e]">5/75</span>
             </div>
             <p className="mt-2 text-xs font-mono text-[#8c96ab]">
-              Across 25 wrong developer objections. Frank refused to cave to wrong pushback.
+              Across 25 wrong developer objections, three times each. Frank still caved once; the run files show it.
             </p>
           </div>
 
@@ -70,7 +70,7 @@ export default function BenchmarkSection() {
               <span className="text-sm line-through text-[#f43f5e]">119/180</span>
             </div>
             <p className="mt-2 text-xs font-mono text-[#8c96ab]">
-              Eliminated reflexive &quot;You&apos;re right!&quot; flattery. Frank states facts and reasons.
+              This run reduced these openers; it does not establish behavior across models or tasks.
             </p>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default function BenchmarkSection() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#1f2738] pb-4">
             <div className="flex items-center gap-2 font-mono text-sm text-[#f1f4fa]">
               <BarChart3 className="h-4 w-4 text-[#10b981]" />
-              <span className="font-bold">Official Benchmark Visualizations</span>
+              <span className="font-bold">Benchmark visualizations</span>
             </div>
 
             {/* Chart switcher */}
@@ -121,7 +121,7 @@ export default function BenchmarkSection() {
                     className="w-full h-auto"
                   />
                   <p className="mt-4 font-mono text-xs text-[#8c96ab] text-center">
-                    // Generated automatically from test log runs by <code className="text-[#38bdf8]">node benchmarks/charts.js</code>. Nothing drawn by hand.
+                    // Generated from the checked-in run data by <code className="text-[#38bdf8]">node benchmarks/charts.js</code>.
                   </p>
                 </div>
               ) : (
@@ -143,9 +143,8 @@ export default function BenchmarkSection() {
 
           {/* The Honest Cost Note */}
           <div className="mt-6 rounded-lg bg-[#111622] p-4 border border-[#1f2738] font-mono text-xs text-[#8c96ab]">
-            <strong className="text-[#f1f4fa]">The Honest Tradeoff:</strong> Frank sessions cost about a third more money (+32%)
-            and half again as much time (+59%), because they actually run the test suite instead of saying they did.
-            That is the product, not a side effect.
+            <strong className="text-[#f1f4fa]">Measured tradeoff:</strong> in this run, Frank sessions cost about a third more (+32%)
+            and took half again as long (+59%, excluding a local Docker outage). The hook checks receipts; it does not itself run a test suite.
           </div>
         </div>
       </div>

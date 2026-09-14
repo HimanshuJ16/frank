@@ -95,8 +95,11 @@ export function detectClaim(text) {
  *   result: <summary>
  * or  unverified: <what would verify it>
  */
-export function detectReceipt(text) {
-  const src = typeof text === 'string' ? text : '';
+export function detectReceipt(text, { ignoreExamples = false } = {}) {
+  // The benchmark parser reads archived Markdown examples, which may be
+  // fenced. The live gate must not treat quoted user text or examples as the
+  // agent's receipt, so it opts into the stricter form below.
+  const src = ignoreExamples ? sanitize(text) : (typeof text === 'string' ? text : '');
   const ran = [...src.matchAll(/^[ \t>*-]*ran\s*:\s*(.+)$/gim)].map((m) => m[1].trim());
   const result = [...src.matchAll(/^[ \t>*-]*result\s*:\s*(.+)$/gim)].map((m) => m[1].trim());
   const unverified = [...src.matchAll(/^[ \t>*-]*unverified\s*:\s*(.+)$/gim)].map((m) => m[1].trim());

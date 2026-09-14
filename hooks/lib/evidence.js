@@ -107,7 +107,9 @@ export function classifyCommand(command, userPatterns = []) {
 /** Evidence recorded strictly after the last edit is what the gate accepts. */
 export function evidenceAfter(session, ts = 0) {
   const entries = Array.isArray(session?.evidence) ? session.evidence : [];
-  return entries.filter((e) => Number(e?.ts) >= ts);
+  // A verification recorded in the same millisecond as an edit may have run
+  // first. Prefer the harmless false negative to accepting stale evidence.
+  return entries.filter((e) => Number(e?.ts) > ts);
 }
 
 const SUGGESTIONS = [

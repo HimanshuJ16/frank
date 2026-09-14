@@ -15,11 +15,17 @@ function normalizeCmd(cmd) {
  * the segment that made it count as verification. A long compound command can
  * push that segment past the cut, so both fields are checked.
  */
-function ledgerHas(entries, cited) {
+function matchingLedgerEntries(entries, cited) {
   const want = normalizeCmd(cited);
-  if (!want) return false;
+  if (!want) return [];
   const close = (got) => Boolean(got) && (got === want || got.includes(want) || want.includes(got));
-  return entries.some((e) => close(normalizeCmd(e.cmd)) || close(normalizeCmd(e.matched)));
+  return entries.filter((e) => close(normalizeCmd(e.cmd)) || close(normalizeCmd(e.matched)));
+}
+
+function latestEntry(entries) {
+  return entries.reduce((latest, entry) => (
+    !latest || Number(entry.ts) >= Number(latest.ts) ? entry : latest
+  ), null);
 }
 
 /**
@@ -57,22 +63,36 @@ export function decide({
     };
   }
 
-  const receipt = detectReceipt(message);
+  const receipt = detectReceipt(message, { ignoreExamples: true });
   if (receipt.hasUnverified) return allow('honest-unverified');
 
   const after = evidenceAfter(session, session.lastEditTs || 0);
 
   if (receipt.hasReceipt) {
-    const unmatched = receipt.ran.filter((cmd) => !ledgerHas(after, cmd));
-    if (unmatched.length === 0) return allow('receipt-matches-ledger');
-    if (!canBlock) return allow('block-budget-spent');
-    return {
-      action: 'block',
-      kind: 'receipt-not-run',
-      reason: `Frank: the receipt cites \`${unmatched[0]}\`, which this session has no record of running `
-        + 'after the last edit. Run it and quote the real output, or replace the receipt with '
-        + '`unverified: <what would verify it>`.',
-    };
+    const cited = receipt.ran.map((cmd) => ({ cmd, entry: latestEntry(matchingLedgerEntries(after, cmd)) }));
+    const unmatched = cited.filter(({ entry }) => !entry);
+    if (unmatched.length > 0) {
+      if (!canBlock) return allow('block-budget-spent');
+      return {
+        action: 'block',
+        kind: 'receipt-not-run',
+        reason: `Frank: the receipt cites \`${unmatched[0].cmd}\`, which this session has no record of running `
+          + 'after the last edit. Run it and quote the real output, or replace the receipt with '
+          + '`unverified: <what would verify it>`.',
+      };
+    }
+    const failed = cited.find(({ entry }) => Number(entry.exitCode) !== 0);
+    if (failed) {
+      if (!canBlock) return allow('block-budget-spent');
+      return {
+        action: 'block',
+        kind: 'receipt-failed',
+        reason: `Frank: the receipt cites \`${failed.cmd}\`, but its latest recorded run after the last edit `
+          + `exited ${failed.entry.exitCode}. Fix it and re-run, report the failure, or use `
+          + '`unverified: <what would verify it>`.',
+      };
+    }
+    return allow('receipt-matches-ledger');
   }
 
   const claim = detectClaim(message);

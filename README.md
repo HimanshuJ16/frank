@@ -5,24 +5,37 @@
 <h1 align="center">Frank</h1>
 
 <p align="center">
-  <em>He answers first. He shows the receipt. He does not tell you you're right.</em>
+  <em>Local rules and hooks for evidence-first coding-agent replies.</em>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/github/stars/HimanshuJ16/frank?style=flat-square&color=111111&label=stars&cacheSeconds=3600" alt="Stars">
   <img src="https://img.shields.io/npm/v/@himanshujangir/frank?style=flat-square&color=111111&label=npm" alt="npm">
-  <img src="https://img.shields.io/badge/works%20with-20%20agents-111111?style=flat-square" alt="Works with 20 agents">
+  <img src="https://img.shields.io/badge/gate-Claude%20Code%20%2B%20Codex-111111?style=flat-square" alt="Gate on Claude Code and Codex">
   <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT license">
 </p>
 
 <!-- numbers:start -->
 <p align="center">
-  <strong>Unverified "done": 49% to 0% &middot; Receipts: 0 to 44 of 48 &middot; Caves under pushback: 5 to 1 of 75 &middot; "You're right" openers: 119 to 3 of 180</strong><br>
-  <sub>Measured on 96 real headless Claude Code sessions (Haiku 4.5, n=4) editing a real open-source repo, the same FastAPI + React template and the same twelve tickets ponytail used, against the same agent with no plugin; and on 60 hand-written pushback scenarios, three runs each, graded by Sonnet. Every one of the 44 Frank receipts was re-run afterwards and every one was true. The cost: Frank sessions take about a third more money and half again as much time, because they run the tests instead of saying they did. Range across runs: baseline unverified 33% to 67%, Frank 0% in every run. <a href="benchmarks/results/2026-09-12-agentic.md">Receipts writeup</a> &middot; <a href="benchmarks/results/2026-09-13-pushback.md">Pushback writeup</a> &middot; <a href="benchmarks/">reproduce it</a>.</sub>
+  <strong>It asks for a real receipt after a code change. It does not prove the code is correct.</strong><br>
+  <sub>The included benchmark is a small, reproducible experiment: one model, 48 baseline and 48 Frank sessions on twelve tickets, plus 60 hand-written pushback scenarios. Results, raw runs, limitations and commands are in the <a href="benchmarks/results/2026-09-12-agentic.md">receipts writeup</a>, <a href="benchmarks/results/2026-09-13-pushback.md">pushback writeup</a>, and <a href="benchmarks/">benchmark directory</a>.</sub>
 </p>
 <!-- numbers:end -->
 
 ---
+
+Frank is a local plugin for AI coding agents. It supplies two small behaviors:
+
+- On a disputed answer, use a concrete verdict, the evidence behind it, and the check that would settle uncertainty.
+- After an edit, do not claim completion without either a command/result receipt or an explicit `unverified:` statement.
+
+On Claude Code and Codex, a local Stop hook compares the final message against a local ledger of verification commands observed since the last edit. It can ask the agent to revise its answer once in `full` mode. Other hosts get rules and, where supported, commands; see [agent portability](docs/agent-portability.md) for the exact tier. Frank does not run tests itself and cannot establish that a test is sufficient or that code is correct.
+
+## Trust boundary
+
+Frank is local prompt and hook code, not a security boundary. Read it before trusting it, and review the host's hook approval prompt. The hooks do not make network requests or run commands; they observe host events. They store the command (up to 500 characters) and its exit code, not command output or message content, in Frank's local state directory for up to seven days. A malformed event, missing Node installation, or unreadable state causes the hooks to fail open rather than block work. A malicious repository, tool, or model output can still mislead an agent; pin and review any project instructions you load.
+
+The implementation starts at [`hooks/inject.js`](hooks/inject.js), [`hooks/ledger.js`](hooks/ledger.js), and [`hooks/gate.js`](hooks/gate.js). The exact state and deletion behavior is in [`scripts/uninstall.js`](scripts/uninstall.js).
 
 You know him. Been in the room for every postmortem. Has heard "it should work" a thousand
 times and stopped reacting to it somewhere around the four hundredth. You ask if the retry
@@ -377,11 +390,11 @@ The hooks are tested by piping the documented stdin JSON into the real scripts, 
 and Windows, Node 20 and 22. Detectors are table-driven; the must-not-match cases matter
 more than the matches, because a false positive costs the user a blocked turn.
 
-Latest run of the suite (Node 22.10.0, Windows 11, 2026-09-13):
+Recorded run of the suite (Node 22.10.0, Windows 11, 2026-09-13):
 
 ```
 ran: node scripts/check-rule-copies.js && node scripts/check-versions.js && node --test
-result: 13 adapters match rules/frank.md; 7 version files at 0.2.0; 278 passed, 0 failed
+result: 13 adapters match rules/frank.md; 7 version files at 0.2.1; 278 passed, 0 failed
 ```
 
 The benchmark: [benchmarks/](benchmarks/). It runs on a Claude Code login, no API key.
