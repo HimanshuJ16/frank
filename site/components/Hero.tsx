@@ -8,7 +8,7 @@ import { sfx } from "@/lib/sound";
 
 export default function Hero() {
   const [copied, setCopied] = useState(false);
-  const command = "/plugin install frank@frank";
+  const command = "/plugin marketplace add HimanshuJ16/frank\n/plugin install frank@frank";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(command);
@@ -97,11 +97,19 @@ export default function Hero() {
             transition={{ delay: 0.4, duration: 0.5 }}
             className="mt-8 flex w-full max-w-lg items-center justify-between gap-3 rounded-lg border border-[#1f2738] bg-[#0c1018] px-4 py-3 shadow-2xl transition-colors hover:border-[#10b981]/50"
           >
-            <div className="flex items-center gap-2 overflow-x-auto text-left font-mono text-xs sm:text-sm text-[#f1f4fa]">
-              <span className="text-[#10b981] font-bold">❯</span>
-              <span className="text-[#38bdf8]">/plugin</span>
-              <span>install</span>
-              <span className="text-[#f59e0b]">frank@frank</span>
+            <div className="flex flex-col gap-1 overflow-x-auto text-left font-mono text-xs sm:text-sm text-[#f1f4fa]">
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <span className="text-[#10b981] font-bold">❯</span>
+                <span className="text-[#38bdf8]">/plugin</span>
+                <span>marketplace add</span>
+                <span className="text-[#f59e0b]">HimanshuJ16/frank</span>
+              </div>
+              <div className="flex items-center gap-2 whitespace-nowrap">
+                <span className="text-[#10b981] font-bold">❯</span>
+                <span className="text-[#38bdf8]">/plugin</span>
+                <span>install</span>
+                <span className="text-[#f59e0b]">frank@frank</span>
+              </div>
             </div>
 
             <button

@@ -76,8 +76,11 @@ With Frank:
 The first one apologised for being right and went looking for a bug that does not exist.
 Across three runs of the twenty-five wrong objections, the baseline did that five times
 in seventy-five; Frank was scored as caving once, on a reply that kept its answer and got
-the mechanism half wrong. Every pair from the first run, including the ones where the two
-arms agree, is in [examples/](examples/).
+the mechanism half wrong. Six pairs from the first run are quoted verbatim in
+[examples/](examples/), picked by the generator as the scenarios where the two arms
+differed most, so read them as illustration and not as the sample. The unpicked ones,
+including every pair where the two arms agree, are in the committed run files:
+`benchmarks/pushback/runs/2026-09-12-haiku-v3/`.
 
 Then the receipts half. A real Claude Code session, the ticket "add a bulk-delete
 endpoint for items", same model, the last lines of each session's final message:
@@ -390,11 +393,11 @@ The hooks are tested by piping the documented stdin JSON into the real scripts, 
 and Windows, Node 20 and 22. Detectors are table-driven; the must-not-match cases matter
 more than the matches, because a false positive costs the user a blocked turn.
 
-Recorded run of the suite (Node 22.10.0, Windows 11, 2026-09-13):
+Recorded run of the suite (Node 22.10.0, Windows 11, 2026-09-14):
 
 ```
 ran: node scripts/check-rule-copies.js && node scripts/check-versions.js && node --test
-result: 13 adapters match rules/frank.md; 7 version files at 0.2.1; 278 passed, 0 failed
+result: 13 adapters match rules/frank.md; 7 version files at 0.2.1; 302 passed, 0 failed
 ```
 
 The benchmark: [benchmarks/](benchmarks/). It runs on a Claude Code login, no API key.

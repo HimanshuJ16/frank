@@ -22,6 +22,12 @@ const TEST_RUNNERS = [
   /\bnode\s+--test\b/i,
   /\bctest\b/i,
   /\btox\b/i,
+  // Monorepo and task-runner spellings. A miss here is the expensive direction:
+  // the user really did run the suite, the ledger does not know, and the gate
+  // hands back a turn for a receipt they have already earned (ADR-029).
+  /\byarn\s+workspaces?\s+\S+\s+(?:run\s+)?(?:test|check)\b/i,
+  /(?:^|[\s;&|(])(?:just|task|mise|rake)\s+(?:\S+\s+)*(?:test|tests|check|ci|verify)\b/i,
+  /\b(?:mix|sbt|swift|flutter|dart)\s+test\b/i,
 ];
 
 const BUILDS = [

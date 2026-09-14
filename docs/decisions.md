@@ -465,6 +465,54 @@ node benchmarks/agentic/report.js benchmarks/agentic/runs/<date>-haiku-reminder 
 If receipts and unverified claims hold at 44 / 48 and 0, the cadence ships and the
 README's cost paragraph changes with it.
 
+## ADR-029: The claim detector fired on "a fixed-size buffer"
+
+**2026-09-14. Accepted.** A second read of the detectors before launch, this time
+measured against real transcripts rather than the fixture table.
+
+`COMPLETION` matched the bare verbs `done`, `fixed`, `implemented`, `resolved` and
+`finished` wherever they appeared. The optional `(?:i(?:'ve| have)?\s+)?` prefix looked
+like it scoped them to the agent's own voice; being optional, it scoped nothing. So the
+gate read a completion claim in ordinary English:
+
+- `a fixed 32-byte input`, `fixed-size chunks`, `fixed-width header` — the adjective
+- `the promise resolved with undefined`, `Postgres resolved the hostname` — a different verb
+- `the React team implemented this in v18` — somebody else's past tense
+- `what needs to be done next`, `two things remain to be done` — outstanding work
+- `Check whether the tests pass on CI` — an instruction to the reader, not a report
+
+Each one costs a turn: the message is handed back, the model rewrites or re-runs, the
+user pays for both. A miss costs nothing but the status quo, which is why the file says
+every rule is biased toward not matching; these rules were not.
+
+A past-tense verb of work is now a claim only when the agent is its subject — at the head
+of a sentence (`Fixed the off-by-one`), after I/we, or passive with no location — and
+never when hyphenated (`fixed-size`). `done` is skipped under `to be done` and after a
+temporal conjunction (`I'll tell you when it's done`). `is fixed/finished at|by|in ...`
+joins the descriptive skip that already covered `is implemented in`. Imperatives
+(`check`, `verify`, `run`, `make sure`) join the conditional skip. Nineteen new
+must-not-match cases.
+
+The same pass fixed three evidence misses in the other direction, which are the more
+expensive kind: the user really did run the suite, the ledger did not recognise it, and
+the gate asked for a receipt they had already earned. `yarn workspace api test`,
+`just test` / `task check` / `rake ci`, and `mix|sbt|swift|flutter|dart test` now count.
+
+Measured on 10,105 assistant messages from local Claude Code transcripts
+(`scripts/ab-claims.mjs`, old rules against new, receipts-bearing messages excluded):
+
+```
+ran: node scripts/ab-claims.mjs
+result: 1,623 flagged by the old rules, 1,510 by the new; 113 no longer flagged
+        (7.0% of all flags); 0 newly flagged; 322 unit tests pass
+```
+
+Not changed: `should work` still fires, including in "should work on Node 20 too, but I
+have not tried it". The ruleset names it as a thing to challenge, and `unverified:` is
+the way through. The per-prompt rules payload is also unchanged at about 530 tokens;
+ADR-028 defers that, and shipping it without the benchmark it names would be the thing
+this project exists to object to.
+
 ## Open questions
 
 - **OQ-1** Answered 2026-09-12 in a headless session with the plugin loaded through

@@ -15,18 +15,29 @@ export function sanitize(text) {
     .replace(/^[ \t]{4,}\S.*$/gm, ' ');          // indented code block
 }
 
+// A past-tense verb of work is a claim when the agent is its subject: at the
+// head of a sentence ("Fixed the off-by-one"), after I/we, or passive with no
+// location. A bare \bimplemented\b also fires on "the React team implemented
+// this in v18" and "the promise resolved with undefined" (ADR-029).
+const WORK = "implemented|resolved|finished|fixed";
 const COMPLETION = [
-  /\b(?:it'?s|that'?s|this is|all)?\s*\bdone\b/i,
+  /\bdone\b/i,
   /\ball set\b/i,
-  /\b(?:i(?:'ve| have)?\s+)?finished\b/i,
-  /\b(?:i(?:'ve| have)?\s+)?implemented\b/i,
-  /\b(?:i(?:'ve| have)?\s+)?fixed\b/i,
-  /\b(?:i(?:'ve| have)?\s+)?resolved\b/i,
+  // (?!-) keeps the adjective out: "a fixed-size buffer", "fixed-width header".
+  new RegExp(String.raw`^[\s*\-–—]*(?:${WORK})\b(?!-)`, 'i'),
+  new RegExp(String.raw`\b(?:i|we)(?:'ve| have|'d)?\s+(?:just\s+|now\s+|already\s+)?(?:${WORK})\b(?!-)`, 'i'),
+  new RegExp(String.raw`\b(?:is|are|was|were|'s|'re|has been|have been|had been)\s+(?:now\s+)?(?:${WORK})\b(?!-)`, 'i'),
   /\bworking now\b/i,
   /\bnow works\b/i,
   /\bshould (?:work|be fixed|pass|be working)\b/i,
   /\bready to (?:go|use|ship|merge)\b/i,
 ];
+
+// "needs to be done", "left to be done", "will be done by the hook": work that
+// is outstanding, not work that was finished.
+const OUTSTANDING = /\b(?:to be|be|being|gets?|got|getting)\s+done\b/i;
+// "I'll tell you when it's done" dates the claim to the future.
+const TEMPORAL = /\b(?:when|until|once|after|before|whenever|while)\b/i;
 
 const VERIFICATION = [
   /\b(?:all\s+)?(?:tests?|specs?|suite|checks?|lint|build|ci|everything|they|it|type[- ]?check(?:s|ing)?|tsc)\s+(?:now\s+)?(?:pass|passes|passed|passing)\b/i,
@@ -52,7 +63,9 @@ export function sentences(text) {
 
 /** Instructions and conditionals aren't claims: "once done, run X". */
 function isConditional(s) {
-  return /^(?:once|when|after|if|unless|let me know|tell me|please)\b/i.test(s);
+  return /^(?:once|when|after|if|unless|let me know|tell me|please)\b/i.test(s)
+    // An instruction to the reader is not a report: "Check whether the tests pass".
+    || /^(?:check|verify|ensure|confirm|make sure|run|try|see)\b/i.test(s);
 }
 
 function isQuestion(s) {
@@ -61,7 +74,7 @@ function isQuestion(s) {
 
 // "Rate limiting is implemented upstream by the gateway" describes code; it
 // does not claim to have finished anything. Passive voice plus a location.
-const DESCRIPTIVE = /\b(?:is|are|was|were|gets?|being)\s+(?:done|implemented|resolved|handled)\s+(?:in|by|at|through|via|upstream|inside|within|on|using|with|as|per)\b/i;
+const DESCRIPTIVE = /\b(?:is|are|was|were|gets?|being)\s+(?:done|implemented|resolved|handled|fixed|finished)\s+(?:in|by|at|through|via|upstream|inside|within|on|using|with|as|per)\b/i;
 
 /** Negation anywhere in the 45 characters before the match disarms it. */
 function negatedBefore(sentence, index) {
@@ -82,6 +95,8 @@ export function detectClaim(text) {
         const m = re.exec(sentence);
         if (!m) continue;
         if (negatedBefore(sentence, m.index)) continue;
+        if (/^done$/i.test(m[0].trim())
+          && (OUTSTANDING.test(sentence) || TEMPORAL.test(sentence.slice(0, m.index)))) continue;
         return { claim: true, kind, matched: m[0].trim(), sentence };
       }
     }

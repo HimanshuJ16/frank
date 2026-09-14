@@ -78,6 +78,29 @@ const NOT_CLAIMS = [
   'This is done via the API, not the CLI.',
   'Deletion is resolved at the database layer through ON DELETE CASCADE.',
   'The parser is implemented in lib/parse.js; the bug is elsewhere.',
+  // work that is outstanding, not work that was finished (ADR-029)
+  "Here's what needs to be done next: wire the handler to the router.",
+  'That is the only thing left to be done.',
+  'Two things remain to be done before this can merge.',
+  'The backfill will be done by the nightly job.',
+  "I'll tell you when it's done.",
+  // somebody else's past tense, or a verb that is not about finishing work
+  'The React team implemented this differently in v18.',
+  'Their team already implemented rate limiting last quarter.',
+  'Postgres resolved the hostname to a container IP.',
+  'The DNS resolved to the wrong A record, which is the bug.',
+  'The spec says the promise resolved with undefined.',
+  'This function is called when the upload has finished.',
+  // an instruction to the reader is not a report
+  'Check whether the tests pass on CI before merging.',
+  'Make sure the build passes before you tag.',
+  'Run the suite and confirm it compiles.',
+  // "fixed" as an adjective: the commonest false positive in a real transcript scan
+  'The buffer is fixed-size, so the offset never moves.',
+  'The header is fixed-width and padded.',
+  'Pre-hash with SHA-256 so bcrypt gets a fixed 32-byte input.',
+  'The window size is fixed at 4096 bytes.',
+  'The timeout is fixed by the upstream config.',
 ];
 
 for (const text of NOT_CLAIMS) {

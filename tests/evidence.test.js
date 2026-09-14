@@ -92,9 +92,19 @@ for (const cmd of NOT_EVIDENCE) {
 }
 
 test('user-configured commands count', () => {
-  assert.equal(classifyCommand('just verify').isEvidence, false);
-  assert.equal(classifyCommand('just verify', ['just verify']).isEvidence, true);
-  assert.equal(classifyCommand('just verify', ['just verify']).category, 'configured');
+  // A project-local script no built-in pattern can know about.
+  assert.equal(classifyCommand('./scripts/smoke.sh').isEvidence, false);
+  assert.equal(classifyCommand('./scripts/smoke.sh', ['./scripts/smoke.sh']).isEvidence, true);
+  assert.equal(classifyCommand('./scripts/smoke.sh', ['./scripts/smoke.sh']).category, 'configured');
+});
+
+test('monorepo and task-runner spellings count', () => {
+  for (const cmd of ['yarn workspace api test', 'just test', 'task check', 'mix test', 'rake ci']) {
+    assert.equal(classifyCommand(cmd).isEvidence, true, `missed: ${cmd}`);
+  }
+  // Still not evidence: the word appears, the runner does not run.
+  assert.equal(classifyCommand('git commit -m "just test it"').isEvidence, false);
+  assert.equal(classifyCommand('echo just test').isEvidence, false);
 });
 
 test('a malformed user pattern is skipped, not fatal', () => {
