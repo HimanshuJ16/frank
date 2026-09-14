@@ -38,21 +38,32 @@ if (fail > 0) {
 }
 
 // The quoted line, e.g. "... 7 version files at 0.2.1; 322 passed, 0 failed".
+// The version in it goes stale on a release the same way the counts go stale on
+// a new test, so both are checked.
 const readme = fs.readFileSync(README, 'utf8');
-const quoted = /^result:.*?(\d+) passed, (\d+) failed\s*$/m.exec(readme);
+const quoted = /^result:.*?version files at (\d+\.\d+\.\d+); (\d+) passed, (\d+) failed\s*$/m.exec(readme);
 if (!quoted) {
-  console.error(`check-receipt: no "result: ... N passed, N failed" line in ${path.basename(README)}.`);
+  console.error(
+    `check-receipt: no "result: ... version files at X.Y.Z; N passed, N failed" line `
+    + `in ${path.basename(README)}.`,
+  );
   process.exit(1);
 }
 
-const [, quotedPass, quotedFail] = quoted.map(Number);
-if (quotedPass !== pass || quotedFail !== fail) {
+const [, quotedVersion, quotedPass, quotedFail] = quoted;
+const { version } = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+
+const drift = [];
+if (quotedVersion !== version) drift.push(`version ${quotedVersion}, but package.json is at ${version}`);
+if (Number(quotedPass) !== pass) drift.push(`${quotedPass} passed, but the suite reports ${pass}`);
+if (Number(quotedFail) !== fail) drift.push(`${quotedFail} failed, but the suite reports ${fail}`);
+
+if (drift.length) {
   console.error(
-    `check-receipt: README quotes ${quotedPass} passed, ${quotedFail} failed; `
-    + `the suite reports ${pass} passed, ${fail} failed.\n`
+    `check-receipt: the README receipt quotes ${drift.join('; ')}.\n`
     + 'Update the recorded run in README.md so the receipt matches what ran.',
   );
   process.exit(1);
 }
 
-console.log(`${pass} passed, ${fail} failed; README receipt agrees`);
+console.log(`${pass} passed, ${fail} failed at ${version}; README receipt agrees`);

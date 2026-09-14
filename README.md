@@ -399,7 +399,7 @@ Recorded run of the suite (Node 22.10.0, Windows 11, 2026-09-14):
 
 ```
 ran: npm run check
-result: 13 adapters match rules/frank.md; 7 version files at 0.2.1; 322 passed, 0 failed
+result: 13 adapters match rules/frank.md; 7 version files at 0.2.2; 322 passed, 0 failed
 ```
 
 The benchmark: [benchmarks/](benchmarks/). It runs on a Claude Code login, no API key.

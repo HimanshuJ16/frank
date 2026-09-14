@@ -1,6 +1,6 @@
 {
   "name": "frank",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Verdict first, receipts attached. No flattery, no caving under pushback, no \"done\" without a command that proves it.",
   "author": {
     "name": "Himanshu Jangir",
@@ -9,7 +9,12 @@
   "homepage": "https://github.com/HimanshuJ16/frank",
   "repository": "https://github.com/HimanshuJ16/frank",
   "license": "MIT",
-  "keywords": ["anti-sycophancy", "honesty", "verification", "code-review"],
+  "keywords": [
+    "anti-sycophancy",
+    "honesty",
+    "verification",
+    "code-review"
+  ],
   "skills": "./skills/",
   "hooks": "./hooks/claude-codex-hooks.json",
   "interface": {
@@ -18,7 +23,10 @@
     "longDescription": "Answers first, reasons second. Holds a correct answer under pushback and updates on evidence. Refuses to say done without a command that ran.",
     "developerName": "Himanshu Jangir",
     "category": "Productivity",
-    "capabilities": ["Instructions", "Lifecycle hooks"],
+    "capabilities": [
+      "Instructions",
+      "Lifecycle hooks"
+    ],
     "websiteURL": "https://github.com/HimanshuJ16/frank",
     "defaultPrompt": [
       "Use Frank mode for this task.",

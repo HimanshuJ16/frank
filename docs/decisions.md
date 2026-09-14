@@ -513,6 +513,12 @@ the way through. The per-prompt rules payload is also unchanged at about 530 tok
 ADR-028 defers that, and shipping it without the benchmark it names would be the thing
 this project exists to object to.
 
+Released as 0.2.2. 0.2.1 was already published to npm when the detector changed, so for
+a day the same version string served two different detectors depending on whether a host
+installed from npm or from GitHub. `check-receipt.js` now also fails when the version in
+the README receipt does not match `package.json`, for the same reason it guards the test
+count: a number a human has to remember is a number that drifts.
+
 ## Open questions
 
 - **OQ-1** Answered 2026-09-12 in a headless session with the plugin loaded through
