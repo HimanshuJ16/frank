@@ -388,6 +388,8 @@ npm run check    # rule copies, manifest versions, then the tests
 regenerates the thirteen files that carry them (`AGENTS.md`, the `/frank` skill, every
 editor rules file) and `check-rule-copies.js` fails CI on drift. Seven manifests declare
 the version and `check-versions.js` fails if they disagree or a release tag does not match.
+`check-receipt.js` runs the suite and fails if the recorded run below quotes a different
+number, so that receipt cannot go stale without CI saying so.
 
 The hooks are tested by piping the documented stdin JSON into the real scripts, on Linux
 and Windows, Node 20 and 22. Detectors are table-driven; the must-not-match cases matter
@@ -396,8 +398,8 @@ more than the matches, because a false positive costs the user a blocked turn.
 Recorded run of the suite (Node 22.10.0, Windows 11, 2026-09-14):
 
 ```
-ran: node scripts/check-rule-copies.js && node scripts/check-versions.js && node --test
-result: 13 adapters match rules/frank.md; 7 version files at 0.2.1; 302 passed, 0 failed
+ran: npm run check
+result: 13 adapters match rules/frank.md; 7 version files at 0.2.1; 322 passed, 0 failed
 ```
 
 The benchmark: [benchmarks/](benchmarks/). It runs on a Claude Code login, no API key.

@@ -27,5 +27,5 @@ jobs:
       - name: Manifests share one version
         run: node scripts/check-versions.js
 
-      - name: Tests
-        run: npm test
+      - name: Tests, and the README receipt that quotes them
+        run: node scripts/check-receipt.js

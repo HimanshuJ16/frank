@@ -46,7 +46,7 @@
   ],
   "scripts": {
     "test": "node --test",
-    "check": "node scripts/check-rule-copies.js && node scripts/check-versions.js && node --test",
+    "check": "node scripts/check-rule-copies.js && node scripts/check-versions.js && node scripts/check-receipt.js",
     "build:adapters": "node scripts/build-adapters.js",
     "bench:pushback": "node benchmarks/pushback/run.js",
     "stats": "node scripts/stats.js",
